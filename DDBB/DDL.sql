@@ -1,58 +1,48 @@
-CREATE TABLE IF NOT EXISTS Provincia(
-	id_provincia SERIAL PRIMARY KEY,
-  nombre VARCHAR(150)
-);
-
 CREATE TABLE IF NOT EXISTS Localidad(
   id_localidad SERIAL PRIMARY KEY,
-  id_provincia INT,
-  nombre VARCHAR(150),
-  CONSTRAINT FK_provincia FOREIGN KEY (id_provincia) REFERENCES Provincia (id_provincia)
-);
-
-CREATE TABLE IF NOT EXISTS Domicilio(
-  id_domicilio SERIAL PRIMARY KEY,
-  numero INT,
-  calle VARCHAR(100) NOT NULL,
-  id_localidad INT,
-  CONSTRAINT FK_localidad FOREIGN KEY (id_localidad) REFERENCES Localidad(id_localidad)
+  nombre VARCHAR(150) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Grupo_sanguineo(
   id_grupo SERIAL PRIMARY KEY,
-  grupo VARCHAR(30) NOT NULL
+  grupo VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Obra_social(
   id_obra SERIAL PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL
+  nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Impedimento_fisico(
   id_impedimento SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL
+  nombre VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Medicamento(
   id_medicamento SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL
+  nombre VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Alergia(
   id_alergia SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL
+  nombre VARCHAR(30) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Paciente(
-  num_afiliado SERIAL PRIMARY KEY,
+	id_paciente SERIAL PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   apellido VARCHAR(100) NOT NULL,
   dni INT NOT NULL,
-  id_domicilio INT,
+	fecha_nacimiento DATE,
+	num_afiliado INT,
+	num_domicilio INT,
+	calle_domicilio VARCHAR(255),
+	depto_domicilio INT,
+  id_localidad INT,
   id_grupo_sanguineo INT,
   id_obra_social INT,
   
-  CONSTRAINT FK_domicilio FOREIGN KEY (id_domicilio) REFERENCES Domicilio(id_domicilio),
+  CONSTRAINT FK_localidad FOREIGN KEY (id_localidad) REFERENCES Localidad(id_localidad),
   CONSTRAINT FK_grupo_sanguineo FOREIGN KEY (id_grupo_sanguineo) REFERENCES Grupo_sanguineo(id_grupo),
   CONSTRAINT FK_obra_social FOREIGN KEY (id_obra_social) REFERENCES Obra_social(id_obra)
 );
@@ -60,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Paciente(
 CREATE TABLE IF NOT EXISTS Paciente_impedimento (
   id_paciente INT,
   id_impedimento INT,
-  CONSTRAINT FK_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente(num_afiliado),
+  CONSTRAINT FK_paciente_pac_imp FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
   CONSTRAINT FK_impedimento FOREIGN KEY (id_impedimento) REFERENCES Impedimento_fisico(id_impedimento),
   CONSTRAINT PK_paciente_impedimento PRIMARY KEY (id_paciente,id_impedimento)
 );
@@ -68,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Paciente_impedimento (
 CREATE TABLE IF NOT EXISTS Paciente_medicamento (
   id_paciente INT,
   id_medicamento INT,
-  CONSTRAINT FK_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente(num_afiliado),
+  CONSTRAINT FK_paciente_pac_med FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
   CONSTRAINT FK_medicamento FOREIGN KEY (id_medicamento) REFERENCES Medicamento(id_medicamento),
   CONSTRAINT PK_paciente_medicamento PRIMARY KEY (id_paciente,id_medicamento)
 );
@@ -76,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Paciente_medicamento (
 CREATE TABLE IF NOT EXISTS Paciente_alergia (
   id_paciente INT,
   id_alergia INT,
-  CONSTRAINT FK_paciente FOREIGN KEY (id_paciente) REFERENCES Paciente(num_afiliado),
+  CONSTRAINT FK_paciente_pac_alerg FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),
   CONSTRAINT FK_alergia FOREIGN KEY (id_alergia) REFERENCES Alergia(id_alergia),
   CONSTRAINT PK_paciente_alergia PRIMARY KEY (id_paciente,id_alergia)
 );
@@ -90,11 +80,12 @@ CREATE TABLE IF NOT EXISTS Profesional (
 	matricula INT NOT NULL,
 	email VARCHAR(255),
 	telefono INT,
+	fecha_contratacion DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Especialidad (
 	id_especialidad SERIAL PRIMARY KEY,
-	descripcion VARCHAR(255) NOT NULL
+	descripcion VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Profesional_especialidad (
@@ -115,12 +106,20 @@ CREATE TABLE IF NOT EXISTS Sector (
 CREATE TABLE IF NOT EXISTS Consultorio (
 	numero SERIAL PRIMARY KEY,
 	id_sector INT,
-	CONSTRAINT FK_Sector_con FOREIGN KEY (id_sector) REFERENCES Sector (id_sector)
+	CONSTRAINT FK_sector_con FOREIGN KEY (id_sector) REFERENCES Sector (id_sector)
 );
 
 CREATE TABLE IF NOT EXISTS Equipamiento (
 	id_equipamiento SERIAL PRIMARY KEY,
 	nombre VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Consultorio_equipamiento (
+	num_consultorio INT,
+	id_equipamiento INT,
+	CONSTRAINT FK_consultorio_con_equip FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),
+	CONSTRAINT FK_equipamiento_con_equip FOREIGN KEY (id_equipamiento) REFERENCES Consultorio (id_equipamiento),
+	CONSTRAINT PK_consultorio_equipamiento PRIMARY KEY (num_consultorio,id_equipamiento)
 );
 
 ------------------------------------------------------------------------------------------------------------
