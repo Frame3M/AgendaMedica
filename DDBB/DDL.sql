@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS Consultorio_equipamiento (
 	num_consultorio INT,
 	id_equipamiento INT,
 	CONSTRAINT FK_consultorio_con_equip FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),
-	CONSTRAINT FK_equipamiento_con_equip FOREIGN KEY (id_equipamiento) REFERENCES Consultorio (id_equipamiento),
+	CONSTRAINT FK_equipamiento_con_equip FOREIGN KEY (id_equipamiento) REFERENCES Equipamiento (id_equipamiento),
 	CONSTRAINT PK_consultorio_equipamiento PRIMARY KEY (num_consultorio,id_equipamiento)
 );
 
