@@ -123,3 +123,31 @@ CREATE TABLE IF NOT EXISTS Consultorio_equipamiento (
 );
 
 ------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS Estado_turno (
+	id_estado SERIAL PRIMARY KEY,
+	estado VARCHAR(150) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Turno (
+	id_turno SERIAL PRIMARY KEY,
+	fecha DATE NOT NULL,
+	hora TIME NOT NULL,
+	id_paciente INT NOT NULL,
+	legajo_profesional INT NOT NULL,
+	num_consultorio INT NOT NULL,
+	id_estado INT NOT NULL,
+	CONSTRAINT FK_paciente_tur FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),
+	CONSTRAINT FK_profesional_tur FOREIGN KEY (legajo_profesional) REFERENCES Profesional (legajo),
+	CONSTRAINT FK_consultorio_tur FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),
+	CONSTRAINT FK_estado_tur FOREIGN KEY (id_estado) REFERENCES Estado_turno (id_estado)
+);
+
+CREATE TABLE IF NOT EXISTS Diagnostico (
+	id_diagnostico SERIAL PRIMARY KEY,
+	id_turno INT NOT NULL,
+	comentario TEXT,
+	CONSTRAINT FK_turno_diag FOREIGN KEY (id_turno) REFERENCES Turno (id_turno)
+);
+
+------------------------------------------------------------------------------------------------------------
