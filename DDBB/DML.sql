@@ -204,6 +204,90 @@ INSERT INTO Paciente_medicamento (id_paciente, id_medicamento) VALUES
 
 --------------------------------------------------------------------------------------------------------------
 
+INSERT INTO Especialidad (descripcion) VALUES
+('Medicina General'),
+('Pediatría'),
+('Ginecología y Obstetricia'),
+('Cardiología'),
+('Dermatología'),
+('Neurología'),
+('Psiquiatría'),
+('Endocrinología'),
+('Oftalmología'),
+('Otorrinolaringología'),
+('Traumatología y Ortopedia'),
+('Oncología'),
+('Neumonología'),
+('Gastroenterología'),
+('Nefrología'),
+('Reumatología'),
+('Infectología'),
+('Urología'),
+('Cirugía General'),
+('Medicina del Trabajo');
+
+INSERT INTO Profesional (nombre, apellido, matricula, email, telefono, fecha_contratacion) VALUES
+('Martín', 'González', 12345, 'mgonzalez@example.com', 1123456789, '2015-03-12'),
+('Lucía', 'Fernández', 23456, 'lfernandez@example.com', 1145678901, '2018-07-25'),
+('Santiago', 'Rodríguez', 34567, 'srodriguez@example.com', 1156789012, '2012-11-03'),
+('Valentina', 'López', 45678, 'vlopez@example.com', 1134567890, '2019-01-14'),
+('Matías', 'Pérez', 56789, 'mperez@example.com', 1167890123, '2014-05-22'),
+('Camila', 'Martínez', 67890, 'cmartinez@example.com', 1178901234, '2016-09-30'),
+('Federico', 'Gómez', 78901, 'fgomez@example.com', 1189012345, '2017-04-18'),
+('Mariana', 'Sánchez', 89012, 'msanchez@example.com', 1135678901, '2013-08-10'),
+('Ignacio', 'Romero', 90123, 'iromero@example.com', 1154321678, '2020-02-05'),
+('Paula', 'Torres', 1234, 'ptorres@example.com', 1143219876, '2011-12-17'),
+('Julián', 'Ruiz', 11223, 'jruiz@example.com', 1167894321, '2016-06-29'),
+('Florencia', 'Ramírez', 22334, 'framirez@example.com', 1132456789, '2018-10-09'),
+('Diego', 'Alvarez', 33445, 'dalvarez@example.com', 1156789342, '2013-03-27'),
+('Sofía', 'Castro', 44556, 'scastro@example.com', 1178934561, '2019-07-19'),
+('Nicolás', 'Ortiz', 55667, 'nortiz@example.com', 1143567892, '2012-01-23'),
+('Gabriela', 'Molina', 66778, 'gmolina@example.com', 1132987654, '2015-09-11'),
+('Bruno', 'Vega', 77889, 'bvega@example.com', 1156783214, '2017-05-04'),
+('Andrea', 'Cabrera', 88990, 'acabrera@example.com', 1123456780, '2014-11-16'),
+('Maximiliano', 'Silva', 99001, 'msilva@example.com', 1145672345, '2016-02-28'),
+('Carolina', 'Hernández', 10112, 'chernandez@example.com', 1156789345, '2020-08-13'),
+('Juan', 'Navarro', 12123, 'jnavarro@example.com', 1139234567, '2013-05-20'),
+('Agustina', 'Rojas', 13134, 'arojas@example.com', 1123459012, '2011-09-08'),
+('Martín', 'Crespo', 14145, 'mcrespo@example.com', 1145678901, '2018-04-01'),
+('Laura', 'Figueroa', 15156, 'lfigueroa@example.com', 1134987654, '2012-12-12'),
+('Diego', 'Vargas', 16167, 'dvargas@example.com', 1178654321, '2019-03-15');
+
+INSERT INTO Profesional_especialidad (legajo_profesional, id_especialidad) VALUES
+(1, 7),
+(2, 3),
+(3, 15),
+(4, 10),
+(5, 1),
+(6, 12),
+(7, 6),
+(8, 18),
+(9, 4),
+(10, 20),
+(11, 2),
+(12, 14),
+(13, 9),
+(14, 16),
+(15, 11),
+(16, 5),
+(17, 13),
+(18, 8),
+(19, 19),
+(20, 17),
+(21, 1),
+(22, 6),
+(23, 12),
+(24, 3),
+(25, 7),
+-- Profesionales con 2 especialidades (poco común)
+(3, 8),
+(7, 14),
+(12, 5),
+(18, 2),
+(20, 11);
+
+--------------------------------------------------------------------------------------------------------------
+
 
 
 
