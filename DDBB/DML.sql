@@ -288,6 +288,210 @@ INSERT INTO Profesional_especialidad (legajo_profesional, id_especialidad) VALUE
 
 --------------------------------------------------------------------------------------------------------------
 
+INSERT INTO Sector (letra) VALUES
+('A'),
+('B'),
+('C');
+
+INSERT INTO Consultorio (id_sector) VALUES
+(2),
+(1),
+(3),
+(3),
+(1),
+(2),
+(1),
+(3),
+(2),
+(1),
+(3),
+(2),
+(2),
+(3),
+(1),
+(3),
+(1),
+(2),
+(3),
+(1),
+(2),
+(3),
+(2),
+(1),
+(3);
+
+INSERT INTO Equipamiento (nombre) VALUES
+('Camilla'),
+('Esfigmomanómetro'),
+('Estetoscopio'),
+('Termómetro'),
+('Oxímetro de pulso'),
+('Electrocardiógrafo (ECG)'),
+('Monitor de signos vitales'),
+('Ventilador mecánico'),
+('Bisturí'),
+('Aspirador quirúrgico'),
+('Lámpara de exploración'),
+('Silla de ruedas'),
+('Cama hospitalaria'),
+('Túnel de rayos X'),
+('Ecógrafo'),
+('Defibrilador'),
+('Nebulizador'),
+('Incubadora neonatal'),
+('Equipo de anestesia'),
+('Autoclave'),
+('Torniquete'),
+('Férula ortopédica'),
+('Guantes estériles'),
+('Máscaras de oxígeno'),
+('Catéter venoso periférico'),
+('Jeringa y agujas'),
+('Balanza médica'),
+('Centrífuga'),
+('Microscopio clínico'),
+('Equipo de fisioterapia');
+
+INSERT INTO Consultorio_equipamiento (num_consultorio, id_equipamiento) VALUES
+(3, 1),  -- Camilla
+(3, 2),  -- Esfigmomanómetro
+(3, 3),  -- Estetoscopio
+(7, 1),  -- Camilla
+(7, 4),  -- Termómetro
+(7, 5),  -- Oxímetro de pulso
+(12, 6), -- Electrocardiógrafo (ECG)
+(12, 7), -- Monitor de signos vitales
+(12, 3), -- Estetoscopio
+(1, 2),  -- Esfigmomanómetro
+(1, 4),  -- Termómetro
+(25, 8), -- Ventilador mecánico
+(25, 9), -- Bisturí
+(18, 10),-- Aspirador quirúrgico
+(18, 7), -- Monitor de signos vitales
+(9, 11), -- Lámpara de exploración
+(9, 12), -- Silla de ruedas
+(15, 8), -- Ventilador mecánico
+(15, 16),-- Metamizol
+(21, 1), -- Camilla
+(21, 5), -- Oxímetro de pulso
+(2, 3),  -- Estetoscopio
+(2, 2),  -- Esfigmomanómetro
+(5, 4),  -- Termómetro
+(5, 11), -- Lámpara de exploración
+(8, 12), -- Silla de ruedas
+(8, 1),  -- Camilla
+(20, 13),-- Cama hospitalaria
+(20, 14),-- Túnel de rayos X
+(4, 15), -- Ecógrafo
+(4, 6),  -- Electrocardiógrafo (ECG)
+(6, 15), -- Ecógrafo
+(6, 7),  -- Monitor de signos vitales
+(10, 16),-- Defibrilador
+(10, 17),-- Nebulizador
+(17, 17),-- Nebulizador
+(17, 18),-- Incubadora neonatal
+(14, 18),-- Incubadora neonatal
+(14, 19),-- Equipo de anestesia
+(11, 19),-- Equipo de anestesia
+(11, 20),-- Autoclave
+(13, 20),-- Autoclave
+(13, 21),-- Torniquete
+(19, 21),-- Torniquete
+(19, 22),-- Férula ortopédica
+(23, 22),-- Férula ortopédica
+(23, 23),-- Guantes estériles
+(24, 23),-- Guantes estériles
+(24, 24),-- Máscaras de oxígeno
+(16, 24),-- Máscaras de oxígeno
+(16, 25),-- Catéter venoso periférico
+(22, 25),-- Catéter venoso periférico
+(22, 26),-- Jeringa y agujas
+(1, 26), -- Jeringa y agujas
+(3, 27), -- Balanza médica
+(7, 28), -- Centrífuga
+(12, 29),-- Microscopio clínico
+(9, 30), -- Equipo de fisioterapia
+(15, 30);-- Equipo de fisioterapia
+
+--------------------------------------------------------------------------------------------------------------
+
+INSERT INTO estado_turno (estado) VALUES
+('Reservado'),
+('Confirmado'),
+('Atendido'),
+('Cancelado');
+
+-- Tabla Turno con asignaciones coherentes profesional/consultorio para cada paciente
+INSERT INTO Turno (fecha, hora, id_paciente, legajo_profesional, num_consultorio, id_estado) VALUES
+-- Paciente 1: José Luis, sin impedimentos/alergias relevantes -> profesional general, consultorio estándar
+('2025-01-15', '09:30:00', 1, 5, 3, 2), 
+-- Paciente 2: Calisto, alergia a ácaros -> profesional neumonología, consultorio con nebulizador/oxímetro
+('2025-03-22', '11:00:00', 2, 18, 16, 1), 
+-- Paciente 3: Clotilde, discapacidad auditiva -> profesional otorrinolaringología, consultorio con equipo de exploración
+('2025-04-10', '14:15:00', 3, 10, 12, 3), 
+-- Paciente 4: Esmeralda, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-06-05', '08:45:00', 4, 1, 7, 2), 
+-- Paciente 5: Priscila, osteoartritis -> profesional reumatología, consultorio con camilla y monitor signos vitales
+('2025-02-17', '10:30:00', 5, 16, 15, 4), 
+-- Paciente 6: Esther, alergia a picaduras de abeja -> profesional medicina general, consultorio con oxímetro y camilla
+('2025-07-12', '13:00:00', 6, 1, 5, 1), 
+-- Paciente 7: Silvio, parálisis -> profesional neurología, consultorio con ventilador mecánico y camilla
+('2025-05-20', '15:30:00', 7, 7, 7, 2), 
+-- Paciente 8: Leocadia, alergia a epitelios de animales -> profesional neumonología, consultorio con nebulizador
+('2025-08-03', '09:00:00', 8, 18, 8, 3), 
+-- Paciente 9: Fortunato, parálisis cerebral + asma -> profesional neumonología + neurología, consultorio con ventilador y camilla
+('2025-09-18', '12:45:00', 9, 7, 9, 2), 
+-- Paciente 10: Seve, ataxia -> profesional neurología, consultorio con camilla y monitor signos vitales
+('2025-10-25', '10:15:00', 10, 7, 15, 1), 
+-- Paciente 11: Néstor, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-11-05', '11:30:00', 11, 1, 2, 3), 
+-- Paciente 12: Crescencia, cuadraplejia -> profesional neurología, consultorio con camilla, monitor signos vitales
+('2025-03-14', '16:00:00', 12, 7, 12, 4), 
+-- Paciente 13: Adela, espina bífida -> profesional traumatología/ortopedia, consultorio con camilla y férula
+('2025-06-22', '09:45:00', 13, 11, 13, 1), 
+-- Paciente 14: Renato, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-04-30', '14:30:00', 14, 1, 14, 2), 
+-- Paciente 15: Mirta, artritis reumatoide -> profesional reumatología, consultorio con camilla y monitor signos vitales
+('2025-05-10', '08:30:00', 15, 16, 15, 3), 
+-- Paciente 16: Luciano, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-07-19', '15:00:00', 16, 1, 16, 4), 
+-- Paciente 17: Cintia, artritis reumatoide -> profesional reumatología, consultorio con camilla y monitor signos vitales
+('2025-08-27', '10:45:00', 17, 16, 17, 1), 
+-- Paciente 18: Ezequiel, discapacidad visual -> profesional oftalmología, consultorio con lámpara de exploración
+('2025-09-12', '11:15:00', 18, 9, 18, 2), 
+-- Paciente 19: Patricia, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-10-08', '13:30:00', 19, 1, 19, 3), 
+-- Paciente 20: Gabriel, amputación -> profesional traumatología/ortopedia, consultorio con camilla, férula
+('2025-11-20', '09:15:00', 20, 11, 20, 4), 
+-- Paciente 21: Verónica, sin impedimentos -> profesional medicina general, consultorio estándar
+('2025-12-01', '12:00:00', 21, 1, 21, 1), 
+-- Paciente 22: Rodrigo, lesión medular/paraplejia -> profesional neurología, consultorio con camilla y monitor signos vitales
+('2025-12-15', '10:30:00', 22, 7, 22, 2), 
+-- Paciente 23: Mariana, alergia a maní + aspirina -> profesional neumonología, consultorio con nebulizador
+('2025-12-22', '11:45:00', 23, 18, 23, 3), 
+-- Paciente 24: Fernando, enfermedad de Parkinson -> profesional neurología, consultorio con camilla y monitor signos vitales
+('2025-11-28', '14:15:00', 24, 7, 24, 2), 
+-- Paciente 25: Tobias, malformación congénita de miembros -> profesional traumatología/ortopedia, consultorio con camilla y férula
+('2025-12-30', '08:45:00', 25, 11, 25, 1);
+
+-- Diagnósticos para turnos atendidos (id_estado = 3)
+INSERT INTO Diagnostico (id_turno, comentario) VALUES
+-- Turno 3: Clotilde, discapacidad auditiva
+(3, 'Paciente con discapacidad auditiva. No se observa alteración adicional. Se sugiere control audiológico anual.'),
+-- Turno 8: Leocadia, alergia a epitelios de animales
+(8, 'Paciente presenta síntomas de rinitis alérgica leve. Se recomienda evitar exposición a mascotas y usar Budesonida inhalatoria según indicación.'),
+-- Turno 11: Néstor, sin impedimentos/alergias
+(11, 'Paciente en perfecto estado de salud. No se detectan anomalías.'),
+-- Turno 15: Mirta, artritis reumatoide
+(15, 'Paciente con antecedentes de artritis reumatoide. Observa rigidez articular leve en manos y rodillas. Se recomienda continuar tratamiento con Dexametasona en caso de brote.'),
+-- Turno 18: Ezequiel, discapacidad visual
+(18, 'Paciente con discapacidad visual. Presencia de leve hipertensión ocular. Se recomienda control oftalmológico regular.'),
+-- Turno 23: Mariana, alergia a maní y aspirina
+(23, 'Paciente con antecedentes de alergia a maní y AINEs. No se observaron signos de reacción alérgica durante la visita. Se sugiere continuar evitando AINEs y monitorear reacciones.'),
+-- Turno 24: Fernando, enfermedad de Parkinson
+(24, 'Paciente con enfermedad de Parkinson, presenta temblor leve y rigidez. Se ajusta medicación según evolución. Se recomienda seguimiento neurológico regular.');
+
+--------------------------------------------------------------------------------------------------------------
 
 
 
