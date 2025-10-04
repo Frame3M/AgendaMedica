@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Localidad(
   id_localidad SERIAL PRIMARY KEY,
-  nombre VARCHAR(150) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Grupo_sanguineo(
@@ -10,22 +10,22 @@ CREATE TABLE IF NOT EXISTS Grupo_sanguineo(
 
 CREATE TABLE IF NOT EXISTS Obra_social(
   id_obra SERIAL PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Impedimento_fisico(
   id_impedimento SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Medicamento(
   id_medicamento SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Alergia(
   id_alergia SERIAL PRIMARY KEY,
-  nombre VARCHAR(30) NOT NULL UNIQUE
+  nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Paciente(
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Paciente(
 	num_afiliado INT,
 	num_domicilio INT,
 	calle_domicilio VARCHAR(255),
-	depto_domicilio INT,
+	depto_domicilio VARCHAR(10),
   id_localidad INT,
   id_grupo_sanguineo INT,
   id_obra_social INT,
