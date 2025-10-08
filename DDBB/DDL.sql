@@ -143,11 +143,14 @@ CREATE TABLE IF NOT EXISTS Turno (
 	CONSTRAINT FK_estado_tur FOREIGN KEY (id_estado) REFERENCES Estado_turno (id_estado)
 );
 
-CREATE TABLE IF NOT EXISTS Diagnostico (
-	id_diagnostico SERIAL PRIMARY KEY,
-	id_turno INT NOT NULL,
-	comentario TEXT,
-	CONSTRAINT FK_turno_diag FOREIGN KEY (id_turno) REFERENCES Turno (id_turno)
+CREATE TABLE IF NOT EXISTS Historia_clinica (
+	id_historiaClinica SERIAL PRIMARY KEY,
+	id_paciente INT NOT NULL,
+	id_turno INT,
+	fecha DATE,
+	observacion TEXT,
+	CONSTRAINT FK_paciente_historia FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),
+	CONSTRAINT FK_turno_historia FOREIGN KEY (id_turno) REFERENCES Turno (id_turno)
 );
 
 ------------------------------------------------------------------------------------------------------------

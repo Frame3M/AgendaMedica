@@ -475,21 +475,21 @@ INSERT INTO Turno (fecha, hora, id_paciente, legajo_profesional, num_consultorio
 ('2025-12-30', '08:45:00', 25, 11, 25, 1);
 
 -- Diagnósticos para turnos atendidos (id_estado = 3)
-INSERT INTO Diagnostico (id_turno, comentario) VALUES
+INSERT INTO historia_clinica (id_paciente,id_turno,fecha, observacion) VALUES
 -- Turno 3: Clotilde, discapacidad auditiva
-(3, 'Paciente con discapacidad auditiva. No se observa alteración adicional. Se sugiere control audiológico anual.'),
+(3,3,'2025-04-10', 'Paciente con discapacidad auditiva. No se observa alteración adicional. Se sugiere control audiológico anual.'),
 -- Turno 8: Leocadia, alergia a epitelios de animales
-(8, 'Paciente presenta síntomas de rinitis alérgica leve. Se recomienda evitar exposición a mascotas y usar Budesonida inhalatoria según indicación.'),
+(8,8,'2025-08-03', 'Paciente presenta síntomas de rinitis alérgica leve. Se recomienda evitar exposición a mascotas y usar Budesonida inhalatoria según indicación.'),
 -- Turno 11: Néstor, sin impedimentos/alergias
-(11, 'Paciente en perfecto estado de salud. No se detectan anomalías.'),
+(11,11,'2025-11-05', 'Paciente en perfecto estado de salud. No se detectan anomalías.'),
 -- Turno 15: Mirta, artritis reumatoide
-(15, 'Paciente con antecedentes de artritis reumatoide. Observa rigidez articular leve en manos y rodillas. Se recomienda continuar tratamiento con Dexametasona en caso de brote.'),
+(15,15,'2025-05-10', 'Paciente con antecedentes de artritis reumatoide. Observa rigidez articular leve en manos y rodillas. Se recomienda continuar tratamiento con Dexametasona en caso de brote.'),
 -- Turno 18: Ezequiel, discapacidad visual
-(18, 'Paciente con discapacidad visual. Presencia de leve hipertensión ocular. Se recomienda control oftalmológico regular.'),
+(18,NULL,'2024-09-12', 'Paciente con discapacidad visual. Presencia de leve hipertensión ocular. Se recomienda control oftalmológico regular.'),
 -- Turno 23: Mariana, alergia a maní y aspirina
-(23, 'Paciente con antecedentes de alergia a maní y AINEs. No se observaron signos de reacción alérgica durante la visita. Se sugiere continuar evitando AINEs y monitorear reacciones.'),
+(23,23,'2025-12-22', 'Paciente con antecedentes de alergia a maní y AINEs. No se observaron signos de reacción alérgica durante la visita. Se sugiere continuar evitando AINEs y monitorear reacciones.'),
 -- Turno 24: Fernando, enfermedad de Parkinson
-(24, 'Paciente con enfermedad de Parkinson, presenta temblor leve y rigidez. Se ajusta medicación según evolución. Se recomienda seguimiento neurológico regular.');
+(24,24,'2025-11-28', 'Paciente con enfermedad de Parkinson, presenta temblor leve y rigidez. Se ajusta medicación según evolución. Se recomienda seguimiento neurológico regular.');
 
 --------------------------------------------------------------------------------------------------------------
 
