@@ -1,0 +1,6 @@
+,id,name,origin,roast_level,flavor_profile,preparation_method
+0,c1,Espresso Clásico,Mezcla de Sudamérica y África,Medio Oscuro,"Intenso, notas de chocolate, cuerpo completo","['Espresso', 'Latte', 'Cappuccino']"
+1,c2,Café de Origen Colombia Supremo,Colombia,Medio,"Suave, acidez brillante, notas cítricas y caramelo","['Filtro', 'Prensa Francesa', 'Aeropress']"
+2,c3,Etiopía Yirgacheffe,Etiopía,Claro,"Floral, té negro, arándano, acidez vibrante","['V60', 'Chemex', 'Sifón']"
+3,c4,Brasil Santos,Brasil,Medio,"Bajo en acidez, nuez, chocolate con leche, cremoso","['Filtro', 'Espresso', 'Prensa Francesa']"
+4,c5,Guatemala Antigua,Guatemala,Medio Oscuro,"Cacao, especias, ahumado, cuerpo denso","['Espresso', 'Filtro', 'Aeropress']"
