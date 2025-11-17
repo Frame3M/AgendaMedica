@@ -219,7 +219,39 @@
       "name": "Agente para MAILS"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "description": "AGENTE PARA DRIVE\nHerramienta sube informacion a DRIVE\n\nEnviarle un JSON",
+        "workflowId": {
+          "__rl": true,
+          "value": "SDobU1LenH0a63jA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/SDobU1LenH0a63jA",
+          "cachedResultName": "Agente para DRIVE"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "info": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('info', `El json que \"Agente para BUSQUEDA\" te devuelve, unicamente el JSON`, 'string') }}"
+          },
+          "matchingColumns": [
+            "info"
+          ],
+          "schema": [
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
@@ -227,8 +259,7 @@
         256
       ],
       "id": "bfbc3b06-eb2d-438d-abf6-dc1ba2a6c33d",
-      "name": "Agente para DRIVE",
-      "disabled": true
+      "name": "Agente para DRIVE"
     }
   ],
   "pinData": {},
@@ -317,7 +348,13 @@
     },
     "Agente para DRIVE": {
       "ai_tool": [
-        []
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -325,7 +362,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1d8ae136-6f2e-461e-8670-ecfb7cb677a3",
+  "versionId": "20651de8-53b6-4f37-8e74-7e0629e53b06",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"

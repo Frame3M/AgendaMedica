@@ -1,0 +1,152 @@
+{
+  "name": "Agente para DRIVE",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Data"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        192
+      ],
+      "id": "3602bbd0-343f-4ede-ad29-26a7edd748bb",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import json\nimport re\n\njson_text = _input.first().json.Data\ncleaned_string = json_text.strip('\\n')\ncleaned_string = re.sub(r'json\\s*', '', cleaned_string, flags=re.IGNORECASE)\ncleaned_string = cleaned_string.replace(\"\\n\",\"\")\ncleaned_string = cleaned_string.replace(\" \",\"\")\ncleaned_string = cleaned_string.replace(\"`\",\"\")\ncleaned_string = json.loads(cleaned_string)\n\nreturn cleaned_string"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        192
+      ],
+      "id": "84149c9b-49c1-4550-85f3-ff73dc9056eb",
+      "name": "Code in Python (Beta)",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtiene el primer item de entrada\nconst json_text = $input.first().json.query\n\n// Si no hay texto de entrada, devuelve un item vacío\nif (!json_text) {\n  return { json: {} };\n}\n\n// 1. Limpiar el String (esto es equivalente a tu re.sub y replace)\nlet cleaned_string = json_text.trim(); // Quita espacios/saltos al inicio/fin\ncleaned_string = cleaned_string.replace(/json\\s*/gi, ''); // `re.sub(r'json\\s*', '', flags=re.IGNORECASE)`\ncleaned_string = cleaned_string.replace(/\\n/g, '');      // `replace(\"\\n\",\"\")`\ncleaned_string = cleaned_string.replace(/`/g, '');       // `replace(\"`\",\"\")`\n\nlet parsed_data;\n\n// 2. Parsear el JSON (esto es equivalente a tu try/except json.loads)\ntry {\n  parsed_data = JSON.parse(cleaned_string);\n} catch (e) {\n  // Si falla el parseo, devuelve un item vacío\n  return { json: {} };\n}\n\n// 3. Lógica de formato de salida (replicando tu código Python)\n\n// if len(cleaned_string) != 0:\nif (parsed_data.length === 0) {\n  return { json: {} };\n}\n\n// if type(cleaned_string[0]) == type({}):\n// (Comprueba si el primer elemento es un objeto, pero no un array ni null)\nif (typeof parsed_data[0] === 'object' && parsed_data[0] !== null && !Array.isArray(parsed_data[0])) {\n  \n  // `return cleaned_string` (en Python) devuelve una lista que n8n divide en múltiples items.\n  // El equivalente en JS es mapear la lista a items de n8n:\n  return parsed_data.map(data => ({ json: data }));\n\n} else {\n  // `return {\"data\":cleaned_string}` (en Python) devuelve un solo item.\n  // El equivalente en JS es:\n  return {\"json\":parsed_data};\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        16
+      ],
+      "id": "793b1c9a-714e-4528-ae8b-6d6e62480bd9",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        192
+      ],
+      "id": "f937dfad-ac1b-41d8-adf7-6a39c7586be7",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "empleados",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        480,
+        192
+      ],
+      "id": "b3ecee6b-c1b1-4fe5-9c04-b3c39febdd66",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tn9hSqLDF9dyFDqB",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "info": "{\"output\":\"```json\\n[{\\\"legajo\\\":1,\\\"nombre\\\":\\\"Martín\\\",\\\"apellido\\\":\\\"González\\\",\\\"matricula\\\":12345,\\\"email\\\":\\\"mgonzalez@example.com\\\",\\\"telefono\\\":1123456789,\\\"fecha_contratacion\\\":\\\"2015-03-12T00:00:00.000Z\\\"},{\\\"legajo\\\":2,\\\"nombre\\\":\\\"Lucía\\\",\\\"apellido\\\":\\\"Fernández\\\",\\\"matricula\\\":23456,\\\"email\\\":\\\"lfernandez@example.com\\\",\\\"telefono\\\":1145678901,\\\"fecha_contratacion\\\":\\\"2018-07-25T00:00:00.000Z\\\"},{\\\"legajo\\\":3,\\\"nombre\\\":\\\"Santiago\\\",\\\"apellido\\\":\\\"Rodríguez\\\",\\\"matricula\\\":34567,\\\"email\\\":\\\"srodriguez@example.com\\\",\\\"telefono\\\":1156789012,\\\"fecha_contratacion\\\":\\\"2012-11-03T00:00:00.000Z\\\"},{\\\"legajo\\\":4,\\\"nombre\\\":\\\"Valentina\\\",\\\"apellido\\\":\\\"López\\\",\\\"matricula\\\":45678,\\\"email\\\":\\\"vlopez@example.com\\\",\\\"telefono\\\":1134567890,\\\"fecha_contratacion\\\":\\\"2019-01-14T00:00:00.000Z\\\"},{\\\"legajo\\\":5,\\\"nombre\\\":\\\"Matías\\\",\\\"apellido\\\":\\\"Pérez\\\",\\\"matricula\\\":56789,\\\"email\\\":\\\"mperez@example.com\\\",\\\"telefono\\\":1167890123,\\\"fecha_contratacion\\\":\\\"2014-05-22T00:00:00.000Z\\\"},{\\\"legajo\\\":6,\\\"nombre\\\":\\\"Camila\\\",\\\"apellido\\\":\\\"Martínez\\\",\\\"matricula\\\":67890,\\\"email\\\":\\\"cmartinez@example.com\\\",\\\"telefono\\\":1178901234,\\\"fecha_contratacion\\\":\\\"2016-09-30T00:00:00.000Z\\\"},{\\\"legajo\\\":7,\\\"nombre\\\":\\\"Federico\\\",\\\"apellido\\\":\\\"Gómez\\\",\\\"matricula\\\":78901,\\\"email\\\":\\\"fgomez@example.com\\\",\\\"telefono\\\":1189012345,\\\"fecha_contratacion\\\":\\\"2017-04-18T00:00:00.000Z\\\"},{\\\"legajo\\\":8,\\\"nombre\\\":\\\"Mariana\\\",\\\"apellido\\\":\\\"Sánchez\\\",\\\"matricula\\\":89012,\\\"email\\\":\\\"msanchez@example.com\\\",\\\"telefono\\\":1135678901,\\\"fecha_contratacion\\\":\\\"2013-08-10T00:00:00.000Z\\\"},{\\\"legajo\\\":9,\\\"nombre\\\":\\\"Ignacio\\\",\\\"apellido\\\":\\\"Romero\\\",\\\"matricula\\\":90123,\\\"email\\\":\\\"iromero@example.com\\\",\\\"telefono\\\":1154321678,\\\"fecha_contratacion\\\":\\\"2020-02-05T00:00:00.000Z\\\"},{\\\"legajo\\\":10,\\\"nombre\\\":\\\"Paula\\\",\\\"apellido\\\":\\\"Torres\\\",\\\"matricula\\\":1234,\\\"email\\\":\\\"ptorres@example.com\\\",\\\"telefono\\\":1143219876,\\\"fecha_contratacion\\\":\\\"2011-12-17T00:00:00.000Z\\\"},{\\\"legajo\\\":11,\\\"nombre\\\":\\\"Julián\\\",\\\"apellido\\\":\\\"Ruiz\\\",\\\"matricula\\\":11223,\\\"email\\\":\\\"jruiz@example.com\\\",\\\"telefono\\\":1167894321,\\\"fecha_contratacion\\\":\\\"2016-06-29T00:00:00.000Z\\\"},{\\\"legajo\\\":12,\\\"nombre\\\":\\\"Florencia\\\",\\\"apellido\\\":\\\"Ramírez\\\",\\\"matricula\\\":22334,\\\"email\\\":\\\"framirez@example.com\\\",\\\"telefono\\\":1132456789,\\\"fecha_contratacion\\\":\\\"2018-10-09T00:00:00.000Z\\\"},{\\\"legajo\\\":13,\\\"nombre\\\":\\\"Diego\\\",\\\"apellido\\\":\\\"Alvarez\\\",\\\"matricula\\\":33445,\\\"email\\\":\\\"dalvarez@example.com\\\",\\\"telefono\\\":1156789342,\\\"fecha_contratacion\\\":\\\"2013-03-27T00:00:00.000Z\\\"},{\\\"legajo\\\":14,\\\"nombre\\\":\\\"Sofía\\\",\\\"apellido\\\":\\\"Castro\\\",\\\"matricula\\\":44556,\\\"email\\\":\\\"scastro@example.com\\\",\\\"telefono\\\":1178934561,\\\"fecha_contratacion\\\":\\\"2019-07-19T00:00:00.000Z\\\"},{\\\"legajo\\\":15,\\\"nombre\\\":\\\"Nicolás\\\",\\\"apellido\\\":\\\"Ortiz\\\",\\\"matricula\\\":55667,\\\"email\\\":\\\"nortiz@example.com\\\",\\\"telefono\\\":1143567892,\\\"fecha_contratacion\\\":\\\"2012-01-23T00:00:00.000Z\\\"},{\\\"legajo\\\":16,\\\"nombre\\\":\\\"Gabriela\\\",\\\"apellido\\\":\\\"Molina\\\",\\\"matricula\\\":66778,\\\"email\\\":\\\"gmolina@example.com\\\",\\\"telefono\\\":1132987654,\\\"fecha_contratacion\\\":\\\"2015-09-11T00:00:00.000Z\\\"},{\\\"legajo\\\":17,\\\"nombre\\\":\\\"Bruno\\\",\\\"apellido\\\":\\\"Vega\\\",\\\"matricula\\\":77889,\\\"email\\\":\\\"bvega@example.com\\\",\\\"telefono\\\":1156783214,\\\"fecha_contratacion\\\":\\\"2017-05-04T00:00:00.000Z\\\"},{\\\"legajo\\\":18,\\\"nombre\\\":\\\"Andrea\\\",\\\"apellido\\\":\\\"Cabrera\\\",\\\"matricula\\\":88990,\\\"email\\\":\\\"acabrera@example.com\\\",\\\"telefono\\\":1123456780,\\\"fecha_contratacion\\\":\\\"2014-11-16T00:00:00.000Z\\\"},{\\\"legajo\\\":19,\\\"nombre\\\":\\\"Maximiliano\\\",\\\"apellido\\\":\\\"Silva\\\",\\\"matricula\\\":99001,\\\"email\\\":\\\"msilva@example.com\\\",\\\"telefono\\\":1145672345,\\\"fecha_contratacion\\\":\\\"2016-02-28T00:00:00.000Z\\\"},{\\\"legajo\\\":20,\\\"nombre\\\":\\\"Carolina\\\",\\\"apellido\\\":\\\"Hernández\\\",\\\"matricula\\\":10112,\\\"email\\\":\\\"chernandez@example.com\\\",\\\"telefono\\\":1156789345,\\\"fecha_contratacion\\\":\\\"2020-08-13T00:00:00.000Z\\\"},{\\\"legajo\\\":21,\\\"nombre\\\":\\\"Juan\\\",\\\"apellido\\\":\\\"Navarro\\\",\\\"matricula\\\":12123,\\\"email\\\":\\\"jnavarro@example.com\\\",\\\"telefono\\\":1139234567,\\\"fecha_contratacion\\\":\\\"2013-05-20T00:00:00.000Z\\\"},{\\\"legajo\\\":22,\\\"nombre\\\":\\\"Agustina\\\",\\\"apellido\\\":\\\"Rojas\\\",\\\"matricula\\\":13134,\\\"email\\\":\\\"arojas@example.com\\\",\\\"telefono\\\":1123459012,\\\"fecha_contratacion\\\":\\\"2011-09-08T00:00:00.000Z\\\"},{\\\"legajo\\\":23,\\\"nombre\\\":\\\"Martín\\\",\\\"apellido\\\":\\\"Crespo\\\",\\\"matricula\\\":14145,\\\"email\\\":\\\"mcrespo@example.com\\\",\\\"telefono\\\":1145678901,\\\"fecha_contratacion\\\":\\\"2018-04-01T00:00:00.000Z\\\"},{\\\"legajo\\\":24,\\\"nombre\\\":\\\"Laura\\\",\\\"apellido\\\":\\\"Figueroa\\\",\\\"matricula\\\":15156,\\\"email\\\":\\\"lfigueroa@example.com\\\",\\\"telefono\\\":1134987654,\\\"fecha_contratacion\\\":\\\"2012-12-12T00:00:00.000Z\\\"},{\\\"legajo\\\":25,\\\"nombre\\\":\\\"Diego\\\",\\\"apellido\\\":\\\"Vargas\\\",\\\"matricula\\\":16167,\\\"email\\\":\\\"dvargas@example.com\\\",\\\"telefono\\\":1178654321,\\\"fecha_contratacion\\\":\\\"2019-03-15T00:00:00.000Z\\\"}]\\n```\"}"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "680ee0c6-c2b4-44ce-bf51-7d14b7e63942",
+  "meta": {
+    "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
+  },
+  "id": "SDobU1LenH0a63jA",
+  "tags": []
+}
