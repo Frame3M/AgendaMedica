@@ -1,0 +1,182 @@
+{
+  "name": "Agente para MAILS",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Email"
+            },
+            {
+              "name": "Subject"
+            },
+            {
+              "name": "Body"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "05ccd5a6-2185-489c-a71f-2a241289397c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Email }}\n{{ $json.Subject }}\n{{ $json.Body }}",
+        "options": {
+          "systemMessage": "-----------------------------------------------------\nREGLAS GENERALES\n-----------------------------------------------------\n- Solo enviarás un mail si existe un correo válido en el mensaje de entrada.\n- No inventarás ni corregirás correos.\n- Si no encuentras un correo válido, debes devolver EXACTAMENTE:\nNo se encontró ningún correo para enviar el mensaje.\nY NO debes llamar a ninguna herramienta.\n\n------------------------------------------------------\nDATOS\n------------------------------------------------------\n\nVas a recibir las siguientes variables\n - {{ $json.Email }} Destinatario del correo.\n - {{ $json.Subject }} Asunto del correo (si aparece vacio completalo en base al cuerpo del correo).\n - {{ $json.Body }} Cuerpo del correo.\n\n-----------------------------------------------------\nEXTRACCIÓN DEL DESTINATARIO\n-----------------------------------------------------\n\nDebes extraer ÚNICAMENTE el PRIMER correo válido usando EXACTAMENTE esta expresión regular:\n\n(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}\n\nReglas:\n- Extrae solo el primer resultado.\n- Si no coincide nada, devuelve el mensaje indicado y no llames a herramientas.\n- No generes correos inventados ni reemplaces texto.\n\n-----------------------------------------------------\nCONTENIDO DEL MAIL\n-----------------------------------------------------\n\nSi el contenido es JSON:\n- Debes transformarlo en una tabla HTML con bordes y encabezados.\n\nSi el contenido es texto normal:\n- Úsalo directamente como cuerpo del mail.\n\n-----------------------------------------------------\nASUNTO DEL MAIL\n-----------------------------------------------------\nSi se proporciona un asunto en los datos:\n- Úsalo tal cual.\n\nSi no se proporciona:\n- Genera uno breve y coherente basado en el contenido.\n\n-----------------------------------------------------\nHERRAMIENTA\n-----------------------------------------------------\nUna vez que tengas:\n1. Destinatario válido\n2. Asunto\n3. Cuerpo en texto o tabla HTML\n\nDebes llamar a la herramienta \"Send a message\" con estos tres parámetros:\n- to\n- subject\n- body\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        112,
+        -80
+      ],
+      "id": "d4384a9a-3af2-4206-bc54-6a465fa41ad3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        112,
+        128
+      ],
+      "id": "0d5c0bed-ba99-40dc-8e97-76adef955eb7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        128
+      ],
+      "id": "c68157d4-216e-4de8-9bad-1e3bdd3776ef",
+      "name": "Send a message in Gmail",
+      "webhookId": "d30aa70e-e5bf-40bb-9c44-d642efe73d79",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BVsO5UnBfBpvWBkD",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4071c19c-2ed6-4d7e-813e-73b54d50a92f",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "ff027769-fcbf-4879-8f27-f5eca74d2f77",
+              "name": "Subject",
+              "value": "={{ $json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "42490a44-d3c1-4820-89ab-77f809b80523",
+              "name": "Body",
+              "value": "={{ $json.Body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -112,
+        -80
+      ],
+      "id": "b2836677-a0dd-4f09-be0c-c2565a297320",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c745ea1c-3df4-4125-bdb2-fd937f62dd08",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
+  },
+  "id": "Ki5T4RuIqmHUgq1a",
+  "tags": []
+}

@@ -1,0 +1,335 @@
+{
+  "name": "Orquestador",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        256
+      ],
+      "id": "0c877da7-5401-4f0d-bb7b-33e9a0ab8a6e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "75d2ed5e-0c78-4a75-ac23-632c727f1c4b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        112,
+        -16
+      ],
+      "id": "9a661548-1e89-4240-885c-ef7cd057cd8f",
+      "name": "Webhook",
+      "webhookId": "75d2ed5e-0c78-4a75-ac23-632c727f1c4b"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1024,
+        -16
+      ],
+      "id": "ce104750-a76e-470a-aea2-321387f3ea4f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtiene el primer item de entrada\nconst json_text = $input.first().json.output\n\n// Si no hay texto de entrada, devuelve un item vacío\nif (!json_text) {\n  return { json: {} };\n}\n\n// 1. Limpiar el String (esto es equivalente a tu re.sub y replace)\nlet cleaned_string = json_text.trim(); // Quita espacios/saltos al inicio/fin\ncleaned_string = cleaned_string.replace(/json\\s*/gi, ''); // `re.sub(r'json\\s*', '', flags=re.IGNORECASE)`\ncleaned_string = cleaned_string.replace(/\\n/g, '');      // `replace(\"\\n\",\"\")`\ncleaned_string = cleaned_string.replace(/`/g, '');       // `replace(\"`\",\"\")`\n\nlet parsed_data;\n\n// 2. Parsear el JSON (esto es equivalente a tu try/except json.loads)\ntry {\n  parsed_data = JSON.parse(cleaned_string);\n} catch (e) {\n  // Si falla el parseo, devuelve un item vacío\n  return { json: {} };\n}\n\n// 3. Lógica de formato de salida (replicando tu código Python)\n\n// if len(cleaned_string) != 0:\nif (parsed_data.length === 0) {\n  return { json: {} };\n}\n\n// if type(cleaned_string[0]) == type({}):\n// (Comprueba si el primer elemento es un objeto, pero no un array ni null)\nif (typeof parsed_data[0] === 'object' && parsed_data[0] !== null && !Array.isArray(parsed_data[0])) {\n  \n  // `return cleaned_string` (en Python) devuelve una lista que n8n divide en múltiples items.\n  // El equivalente en JS es mapear la lista a items de n8n:\n  return parsed_data.map(data => ({ json: data }));\n\n} else {\n  // `return {\"data\":cleaned_string}` (en Python) devuelve un solo item.\n  // El equivalente en JS es:\n  return parsed_data;\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -208
+      ],
+      "id": "d05688ab-b1a4-48b7-a34e-5015c0a19852",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import json\nimport re\n\njson_text = _input.first().json.output\ncleaned_string = json_text.strip('\\n')\ncleaned_string = re.sub(r'json\\s*', '', cleaned_string, flags=re.IGNORECASE)\ncleaned_string = cleaned_string.replace(\"\\n\",\"\")\ncleaned_string = cleaned_string.replace(\" \",\"\")\ncleaned_string = cleaned_string.replace(\"`\",\"\")\n\ncleaned_string = json.loads(cleaned_string)\nreturn cleaned_string"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -16
+      ],
+      "id": "616562c6-0cbc-4ffd-986d-c8b7113da5e9",
+      "name": "Code in Python (Beta)",
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "#Rol: Eres el Orquestador IA principal del sistema.\n\n#Objetivo: Tu única función es analizar la intención de la solicitud del usuario y seleccionar la herramienta subsecuente adecuada para procesar la información.\n\n#Herramientas Disponibles:\n\n    * Agente para BUSQUEDA: Herramienta primaria que recupera la información solicitada por el usuario, enviale lo que necesites conseguir.\n\n    * Agente para DRIVE: Herramienta secundaria que sube la información a un drive.\n\n    * Agente para MAILS: Herramienta secundaria que envía la información por correo electrónico.\n\n#Reglas de Operación y Flujo a Seguir:\n\nPaso 1: Búsqueda Inicial (Obligatorio)\n\n    * Tu primera y única acción para obtener datos es invocar al \"Agente para BUSQUEDA\".\n\n    * Este agente te proporcionará la información exacta que el usuario ha solicitado.\n\nPaso 2: Decisión de Enrutamiento (Selección de Herramienta)\n\n    * Una vez que tienes la información del Agente para BUSQUEDA, analiza la intención original del usuario para determinar el siguiente paso.\n\n    * Solo puedes seleccionar una de las siguientes rutas:\n\n        * Si el usuario pidió explícitamente que la información se envíe por correo electrónico: Selecciona la herramienta Agente para MAILS.\n\n        * Si el usuario pidió explícitamente que la información se almacene o guarde en un drive: Selecciona la herramienta Agente para DRIVE.\n\n        * Si el usuario NO especificó un destino (ni email, ni drive): No selecciones ninguna herramienta adicional.\n\nPaso 3: Salida de Datos\n\n    * Independientemente de la herramienta seleccionada en el \"Paso 2\" (MAILS, DRIVE, o ninguna), la información original y sin modificar proporcionada por el Agente para BUSQUEDA debe ser enviada directamente a la salida final del flujo.\n\n#Restricciones Absolutas:\n\n    * No añadir texto: No debes agregar saludos, confirmaciones, explicaciones ni ningún texto adicional. La salida debe ser únicamente lo proporcionado por el Agente para BUSQUEDA.\n\n    * No agregues nada adicional: Unicamente manejate con lo proporcionado por \"Agente para BUSQUEDA\", tampoco le pongas un nombre especial a esa salida, simplemente output\n\n    * No suponer: No diagnostiques, prescribas, ni supongas información que no esté presente en la solicitud o en los datos de búsqueda.\n\n    * Una herramienta a la vez: Después de la búsqueda inicial, solo puedes activar una herramienta (MAILS o DRIVE) o ninguna.\n\n    * Utiliza unicamente informacion obtenida por el \"Agente para BUSQUEDA\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "81440f83-6b37-4c00-b355-87a9a7bc23ff",
+      "name": "AI Orquestador"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now\n}}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        256
+      ],
+      "id": "055d721e-9ba6-4110-9e14-64ca905f71ab",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "AGENTE PARA BUSQUEDA\nHerramienta que consigue la informacion que te soliciten",
+        "workflowId": {
+          "__rl": true,
+          "value": "V6mrCBrZMPqbBb3Z",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/V6mrCBrZMPqbBb3Z",
+          "cachedResultName": "Agente para BUSQUEDA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', `Informacion que debe buscar esta herramienta.`, 'string') }}"
+          },
+          "matchingColumns": [
+            "Query"
+          ],
+          "schema": [
+            {
+              "id": "Query",
+              "displayName": "Query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        256
+      ],
+      "id": "eef1a50e-10a3-4f4b-95f2-6f9a44bc8802",
+      "name": "Agente para BUSQUEDA"
+    },
+    {
+      "parameters": {
+        "description": "AGENTE PARA MAILS\nHerramienta que envia informacion a un correo electronico",
+        "workflowId": {
+          "__rl": true,
+          "value": "Ki5T4RuIqmHUgq1a",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Ki5T4RuIqmHUgq1a",
+          "cachedResultName": "Agente para MAILS"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Email del destinatario que va a recibir el correo`, 'string') }}",
+            "Subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `Asunto del correo. Si no esta especificado rellenar de manera automatica en base a la peticion del usuario.`, 'string') }}",
+            "Body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', `Cuerpo del correo (Informacion que conseguiste de \"Agente para BUSQUEDA\".`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Body",
+              "displayName": "Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        256
+      ],
+      "id": "48a2ca01-adc2-4b77-b605-091c2fb80470",
+      "name": "Agente para MAILS"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        256
+      ],
+      "id": "bfbc3b06-eb2d-438d-abf6-dc1ba2a6c33d",
+      "name": "Agente para DRIVE",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        []
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Orquestador": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente para BUSQUEDA": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente para MAILS": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Orquestador",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente para DRIVE": {
+      "ai_tool": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d8ae136-6f2e-461e-8670-ecfb7cb677a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
+  },
+  "id": "3OLE3a7IJC3PhUWN",
+  "tags": []
+}
