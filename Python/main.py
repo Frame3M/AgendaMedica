@@ -21,7 +21,7 @@ def generar_peticion(url, mensaje = "empty"):
 
 #################################################################################
 
-URL = "https://frameee.app.n8n.cloud/webhook-test/33296104-1926-43eb-9539-c6f9e2c309a0" # URL de webhook en n8n
+URL = "http://localhost:5678/webhook-test/75d2ed5e-0c78-4a75-ac23-632c727f1c4b" # URL de webhook en n8n
 
 mensaje = input("Que desea consultar: ") # Mensaje para enviar a la IA
 print('\n')
@@ -34,7 +34,7 @@ except requests.exceptions.JSONDecodeError: # Captura de error json, causado por
     print("Error en formato json recibido")
     
 else:
-    df = pd.json_normalize(json_response) # Creando dataframe en base al json 
+    df = pd.json_normalize(json_response,record_path="output") # Creando dataframe en base al json 
     print(df) # Impresion de dataframe
     
     opcion = input("\nDesea crar un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados

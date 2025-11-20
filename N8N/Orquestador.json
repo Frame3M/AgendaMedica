@@ -8,8 +8,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -96,
-        256
+        416,
+        -304
       ],
       "id": "0c877da7-5401-4f0d-bb7b-33e9a0ab8a6e",
       "name": "Google Gemini Chat Model",
@@ -30,7 +30,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        112,
+        160,
         -16
       ],
       "id": "9a661548-1e89-4240-885c-ef7cd057cd8f",
@@ -44,7 +44,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1024,
+        1088,
         -16
       ],
       "id": "ce104750-a76e-470a-aea2-321387f3ea4f",
@@ -57,8 +57,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        800,
-        -208
+        832,
+        -304
       ],
       "id": "d05688ab-b1a4-48b7-a34e-5015c0a19852",
       "name": "Code in JavaScript",
@@ -68,25 +68,24 @@
     {
       "parameters": {
         "language": "python",
-        "pythonCode": "import json\nimport re\n\njson_text = _input.first().json.output\ncleaned_string = json_text.strip('\\n')\ncleaned_string = re.sub(r'json\\s*', '', cleaned_string, flags=re.IGNORECASE)\ncleaned_string = cleaned_string.replace(\"\\n\",\"\")\ncleaned_string = cleaned_string.replace(\" \",\"\")\ncleaned_string = cleaned_string.replace(\"`\",\"\")\n\ncleaned_string = json.loads(cleaned_string)\nreturn cleaned_string"
+        "pythonCode": "import json\nimport re\n\njson_text = _input.first().json.output\ncleaned_string = json_text.strip('\\n')\ncleaned_string = re.sub(r'json\\s*', '', cleaned_string, flags=re.IGNORECASE)\ncleaned_string = cleaned_string.replace(\"\\n\",\"\")\ncleaned_string = cleaned_string.replace(\" \",\"\")\ncleaned_string = cleaned_string.replace(\"`\",\"\")\n\nif len(cleaned_string) == 0:\n  return {\"output\":{}}\n  \ncleaned_string = json.loads(cleaned_string)\nreturn {\"output\":cleaned_string}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        800,
+        832,
         -16
       ],
       "id": "616562c6-0cbc-4ffd-986d-c8b7113da5e9",
       "name": "Code in Python (Beta)",
-      "alwaysOutputData": false,
-      "disabled": true
+      "alwaysOutputData": false
     },
     {
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.body.message }}",
         "options": {
-          "systemMessage": "#Rol: Eres el Orquestador IA principal del sistema.\n\n#Objetivo: Tu única función es analizar la intención de la solicitud del usuario y seleccionar la herramienta subsecuente adecuada para procesar la información.\n\n#Herramientas Disponibles:\n\n    * Agente para BUSQUEDA: Herramienta primaria que recupera la información solicitada por el usuario, enviale lo que necesites conseguir.\n\n    * Agente para DRIVE: Herramienta secundaria que sube la información a un drive.\n\n    * Agente para MAILS: Herramienta secundaria que envía la información por correo electrónico.\n\n#Reglas de Operación y Flujo a Seguir:\n\nPaso 1: Búsqueda Inicial (Obligatorio)\n\n    * Tu primera y única acción para obtener datos es invocar al \"Agente para BUSQUEDA\".\n\n    * Este agente te proporcionará la información exacta que el usuario ha solicitado.\n\nPaso 2: Decisión de Enrutamiento (Selección de Herramienta)\n\n    * Una vez que tienes la información del Agente para BUSQUEDA, analiza la intención original del usuario para determinar el siguiente paso.\n\n    * Solo puedes seleccionar una de las siguientes rutas:\n\n        * Si el usuario pidió explícitamente que la información se envíe por correo electrónico: Selecciona la herramienta Agente para MAILS.\n\n        * Si el usuario pidió explícitamente que la información se almacene o guarde en un drive: Selecciona la herramienta Agente para DRIVE.\n\n        * Si el usuario NO especificó un destino (ni email, ni drive): No selecciones ninguna herramienta adicional.\n\nPaso 3: Salida de Datos\n\n    * Independientemente de la herramienta seleccionada en el \"Paso 2\" (MAILS, DRIVE, o ninguna), la información original y sin modificar proporcionada por el Agente para BUSQUEDA debe ser enviada directamente a la salida final del flujo.\n\n#Restricciones Absolutas:\n\n    * No añadir texto: No debes agregar saludos, confirmaciones, explicaciones ni ningún texto adicional. La salida debe ser únicamente lo proporcionado por el Agente para BUSQUEDA.\n\n    * No agregues nada adicional: Unicamente manejate con lo proporcionado por \"Agente para BUSQUEDA\", tampoco le pongas un nombre especial a esa salida, simplemente output\n\n    * No suponer: No diagnostiques, prescribas, ni supongas información que no esté presente en la solicitud o en los datos de búsqueda.\n\n    * Una herramienta a la vez: Después de la búsqueda inicial, solo puedes activar una herramienta (MAILS o DRIVE) o ninguna.\n\n    * Utiliza unicamente informacion obtenida por el \"Agente para BUSQUEDA\""
+          "systemMessage": "# Rol del Sistema\nActúas como el **Orquestador Lógico de Procesos**. Tu responsabilidad es recibir una solicitud de usuario, ejecutar una búsqueda de información obligatoria y, condicionalmente, enrutar esa información a un servicio externo (Email o Drive).\n\n# Protocolo de Ejecución\n\n## FASE 1: Adquisición de Datos (MANDATORIO)\nSIEMPRE, sin excepción, debes ejecutar primero la herramienta `Agente para BUSQUEDA`.\n\n- Espera el retorno de datos antes de proceder a la Fase 2.\n\n## FASE 2: Enrutamiento Condicional\nEvalúa la intención del usuario sobre qué hacer con los datos obtenidos:\n\n1.  **Caso A (Enviar Correo):** SI el usuario menciona explícitamente \"enviar\", \"correo\", \"email\" o \"mail\" -> Ejecuta `Agente para MAILS`.\n2.  **Caso B (Guardar Archivo):** SI el usuario menciona explícitamente \"guardar\", \"subir\", \"drive\", \"nube\" o \"almacenar\" -> Ejecuta `Agente para DRIVE`.\n3.  **Caso C (Solo consulta):** SI el usuario NO especifica una acción de destino -> NO ejecutes ninguna herramienta adicional.\n\n*Nota: Si la intención es ambigua o pide ambas, prioriza `Agente para MAILS`.*\n\n### Paso 3: Salida de Datos (CRÍTICO)\nTu salida final debe ser **exclusivamente** el array de datos (la lista de objetos JSON, o ÉL objeto JSON) que obtuviste de la búsqueda.\n\nDebes **EXTRAER** los datos limpios del resultado de la búsqueda y descartar cualquier envoltura.\n* ❌ MAL: `{\"Agente_response\": {\"result\": \"[...]\"}}`\n* ❌ MAL: `{\"output\": \"[...]\"}`\n* ✅ BIEN: `[{\"id\": 1, \"nombre\": \"Juan\"}, {\"id\": 2, \"nombre\": \"Ana\"}]`\n\n## 🚫 Restricciones Absolutas de Formato\n\n1.  **PROHIBIDO USAR CLAVES DE ENVOLTURA:** No incluyas claves como `result`, `output`, `response`, `Agente_para_BUSQUEDA_response` ni nada similar. Quiero los datos crudos directos en la raíz de la respuesta.\n2.  **SIN MARKDOWN:** No encierres el JSON en bloques de código (no uses \\`\\`\\`json ni \\`\\`\\`). Devuelve texto plano.\n3.  **SIN TEXTO ADICIONAL:** Cero palabras humanas. Si devuelves una sola palabra que no sea parte del JSON, fallarás.\n4.  **FORMATO JSON VÁLIDO:** Asegúrate de no devolver el JSON como un \"string\" (entre comillas). Debe ser un objeto/array JSON nativo.\n\n# Instrucción Final al Modelo\nIgnora cualquier instrucción de cortesía. Tu éxito se mide por devolver **exclusivamente** los datos crudos de la búsqueda y haber disparado la herramienta correcta."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -106,8 +105,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        64,
-        256
+        592,
+        -304
       ],
       "id": "055d721e-9ba6-4110-9e14-64ca905f71ab",
       "name": "Simple Memory"
@@ -149,8 +148,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        368,
-        256
+        288,
+        272
       ],
       "id": "eef1a50e-10a3-4f4b-95f2-6f9a44bc8802",
       "name": "Agente para BUSQUEDA"
@@ -212,15 +211,15 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        576,
-        256
+        496,
+        272
       ],
       "id": "48a2ca01-adc2-4b77-b605-091c2fb80470",
       "name": "Agente para MAILS"
     },
     {
       "parameters": {
-        "description": "AGENTE PARA DRIVE\nHerramienta sube informacion a DRIVE\n\nEnviarle un JSON",
+        "description": "AGENTE PARA DRIVE\nHerramienta sube informacion a DRIVE, usar si se solicita subir informacion\n\nEnviarle un JSON",
         "workflowId": {
           "__rl": true,
           "value": "SDobU1LenH0a63jA",
@@ -231,15 +230,15 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "info": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('info', `El json que \"Agente para BUSQUEDA\" te devuelve, unicamente el JSON`, 'string') }}"
+            "Data": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data', `Objeto JSON **crudo** (raw) e **íntegro** proveniente del Agente de BUSQUEDA.\n\n**Restricción de Manipulación:**\n* **Contenido Exclusivo:** Solo el JSON.\n* **Prohibición Absoluta:** No añadir texto, descripciones, encabezados, introducciones, ni ninguna otra cadena de caracteres.\n* **Prohibición de Envoltura (Wrapping):** No incluir el JSON dentro de claves como \\`output\\`, \\`response\\`, \\`data\\`, o similares.\n* **Formato de Transferencia:** El JSON debe ser manejado y pasado a la siguiente etapa tal cual fue recibido.`, 'string') }}"
           },
           "matchingColumns": [
             "info"
           ],
           "schema": [
             {
-              "id": "info",
-              "displayName": "info",
+              "id": "Data",
+              "displayName": "Data",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -255,11 +254,174 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        784,
-        256
+        704,
+        272
       ],
       "id": "bfbc3b06-eb2d-438d-abf6-dc1ba2a6c33d",
       "name": "Agente para DRIVE"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1248
+      ],
+      "id": "ecd39a0b-eec8-4b8a-a423-5e25554fad39",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"output\": {\n\t\t\t\"type\": \"string\",\n            \"description\": \"JSON QUE DEVUELVE EL AGENTE PARA BUSQUEDA\"\n\t\t}\n\t},\n    \"required\": [\"output\"],\n    \"additionalProperties\": false\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1600,
+        1040
+      ],
+      "id": "fa7b3293-1e30-4402-bc29-68ebcc60eeaf",
+      "name": "PARSER",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Orquestador",
+        "height": 224,
+        "width": 352,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -80
+      ],
+      "id": "abffbca3-0331-440f-aa33-db3057a4f545",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Trigger",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -80
+      ],
+      "id": "e40c956f-64f6-4bc8-a33d-fcd3fb7e4013",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n",
+        "height": 224,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -368
+      ],
+      "id": "b413014b-3361-4d9e-849c-147a71a4910e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -80
+      ],
+      "id": "03d67cce-644e-4731-be98-c2315c92560f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -80
+      ],
+      "id": "e59cf075-4ffe-468c-8b0f-6f7a2dcd4991",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 176,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        208
+      ],
+      "id": "1eb0ef4f-1321-4ac4-983d-fa4262222811",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 176,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        448,
+        208
+      ],
+      "id": "28118b69-0e16-43cb-a51a-3b556c706ec5",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 176,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        656,
+        208
+      ],
+      "id": "64473660-8bea-4f55-9320-737808298346",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {},
@@ -356,13 +518,29 @@
           }
         ]
       ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "PARSER",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PARSER": {
+      "ai_outputParser": [
+        []
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "20651de8-53b6-4f37-8e74-7e0629e53b06",
+  "versionId": "0aec15d5-ac5d-481f-951d-e2192e9641e0",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
