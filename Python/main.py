@@ -1,52 +1,121 @@
 import requests, pandas as pd
+from prettytable import PrettyTable
+from colorama import Fore, Style, init
+
+URL_WEBHOOK = "http://localhost:5678/webhook/75d2ed5e-0c78-4a75-ac23-632c727f1c4b" # URL de webhook en n8n
+
+init(autoreset=True)
 
 #################################################################################
 
-def generar_peticion(url, mensaje = "empty"):
-    '''
-        Funcion creada para realizar peticion POST
-    '''
-
+def generar_consulta(url, mensaje = "empty"):
+    '''Envía la solicitud de datos al n8n y espera la respuesta.'''
+    
     # Json para enviar a el post (por ahora unicamente mensaje)
     json_body = {
         "message": mensaje
     }
     
     # Solicitud post
-    response = requests.post(url= url, json=json_body)
+    try:
+        response = requests.post(
+            url= url,
+            json=json_body)
+        
+        response.raise_for_status()
+        
+        # Se retorna lo recibido por el request
+        return response
     
-    # Se retorna lo recibido por el request
-    return response
-       
+    except requests.exceptions.RequestException as e:
+        print(Fore.RED + f"❌ Error de conexión con N8N: \n\t{e}")
+        return None
 
 #################################################################################
 
-URL = "http://localhost:5678/webhook-test/75d2ed5e-0c78-4a75-ac23-632c727f1c4b" # URL de webhook en n8n
-
-mensaje = input("Que desea consultar: ") # Mensaje para enviar a la IA
-print('\n')
-
-try:
-    response = generar_peticion(URL, mensaje) # Respuesta recibida en formato request
-    json_response = response.json() # Tranformacion de request a json
+def mostrar_resultados_tabla(json_data):
+    '''Recibe datos en formato json y los muestra como una tabla'''
     
-except requests.exceptions.JSONDecodeError: # Captura de error json, causado por que el mismo no cumple con la sintaxis
-    print("Error en formato json recibido")
+    tabla = PrettyTable()
+    try:
+        #print(json_data)
+        encabezados = list(json_data[0].keys())
+        tabla.field_names = [h.upper() for h in encabezados]
+        
+    except AttributeError:
+        print(Fore.RED + "❌ Error: El formato de datos recibido no es compatible.")
+        return
     
-else:
-    df = pd.json_normalize(json_response,record_path="output") # Creando dataframe en base al json 
-    print(df) # Impresion de dataframe
+    for registro in json_data:
+        fila = [str(registro.get(key, 'N/A')) for key in encabezados]
+        tabla.add_row(fila)
+        
+    tabla.align = "l"
+    tabla.hrules = 1
     
-    opcion = input("\nDesea crar un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
-    while(opcion != 'Y' and opcion != 'N'):
-        print("ERROR - Ingrese opcion valida.")
-        opcion = input("\nDesea crar un csv con los resultados? (Y/N): ").upper()
+    print("\n" + "=" * 100)
+    print(Fore.GREEN + Style.BRIGHT + " " * 28 + "✅ Resultados de la Consulta CHECKINMED ✅\n")
+    
+    print(tabla)
+    
+    print("\n" + "=" * 100)
+    
+    # df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json
+    # print("Aqui tiene su informacion 😊:\n")
+    # print(df) # Impresion de dataframe
+    # print("\n")
+    
+def guardar_csv(json_data):
+    '''Recibe datos en formato json y los guarda en un csv'''
+    
+    df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json 
+    df.to_csv("prueba.csv") # Creando el CSV
+    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 36 + "✅ CSV creado con exito ✅\n")
+    
+#################################################################################
 
-    if opcion == 'Y':
-        df.to_csv("prueba.csv") # Creando el CSV
-        print("CSV creado con exito")
+print("\n" + "=" * 100)
+print(Fore.CYAN + Style.BRIGHT + " " * 35 + "🚑️ Terminal CHECKINMED v1.0 🚑️")
+print("=" * 100 + "\n")
 
-finally:
-    print("Adios!")
+print(Style.BRIGHT + " " * 22 + "-- ¡Bienvenido a la teminal medica de CHECKINMED😊! --\n")
+
+mensaje = input("Que desea consultar: ") # Mensaje para enviar a N8N
+
+print(Fore.LIGHTBLUE_EX + Style.BRIGHT + "\n" + " " * 27 + f"📡 Enviando solicitud de consulta a N8N... 📡\n")
+
+response = generar_consulta(URL_WEBHOOK, mensaje) # Respuesta recibida en formato REQUEST
+
+if response: # Si recibimos algo (no ocurrio ningun error) continuamos
+
+    try:
+        json_response = response.json() # Tranformacion de request a json (si podemos)
+        
+    except requests.exceptions.JSONDecodeError as e: # Captura de error json, causado por que el mismo no cumple con la sintaxis correcta
+        print(Fore.RED + f"❌ Error en formato json recibido de N8N: \n\t{e}")
+        
+    else:
+        if len(json_response.get("output",[])) > 0:
+            mostrar_resultados_tabla(json_response["output"])
+            
+            while True:
+                opcion = input("\nDesea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
+                
+                if opcion == 'Y':
+                    guardar_csv(json_response)
+                    break
+                
+                elif opcion == 'N':
+                    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 40 + "!Adios¡\n")
+                    break
+                
+                else:
+                    print(Fore.RED + "❌ Error - Ingrese opcion valida.")
+                
+        else:
+            print(Fore.RED + "❌ No se obtuvieron resultados para su consulta")
+
+
+print("=" * 100 + "\n")
 
 #################################################################################
