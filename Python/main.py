@@ -79,42 +79,49 @@ print(Fore.CYAN + Style.BRIGHT + " " * 35 + "🚑️ Terminal CHECKINMED v1.0 �
 print("=" * 100 + "\n")
 
 print(Style.BRIGHT + " " * 22 + "-- ¡Bienvenido a la teminal medica de CHECKINMED😊! --\n")
+print(Style.BRIGHT + " " * 19 + "🏥 Puedes solicitar todo tipo de informacion de el Hospital 🗄️\n")
+print(Style.BRIGHT + " " * 19 + "Incluso puedes pedir que se envie a GMAIL o se suba a DRIVE 📨\n")
+print(Style.BRIGHT + " " * 37 + "Para salir ingresa" + Fore.MAGENTA + " exit " + Fore.WHITE + "😊\n")
 
-mensaje = input("Que desea consultar: ") # Mensaje para enviar a N8N
+mensaje = input("Que desea consultar: ").lower() # Mensaje para enviar a N8N
 
-print(Fore.LIGHTBLUE_EX + Style.BRIGHT + "\n" + " " * 27 + f"📡 Enviando solicitud de consulta a N8N... 📡\n")
+if mensaje != "exit":
+    
+    print(Fore.LIGHTBLUE_EX + Style.BRIGHT + "\n" + " " * 27 + f"📡 Enviando solicitud de consulta a N8N... 📡\n")
 
-response = generar_consulta(URL_WEBHOOK, mensaje) # Respuesta recibida en formato REQUEST
+    response = generar_consulta(URL_WEBHOOK, mensaje) # Respuesta recibida en formato REQUEST
 
-if response: # Si recibimos algo (no ocurrio ningun error) continuamos
+    if response: # Si recibimos algo (no ocurrio ningun error) continuamos
 
-    try:
-        json_response = response.json() # Tranformacion de request a json (si podemos)
-        
-    except requests.exceptions.JSONDecodeError as e: # Captura de error json, causado por que el mismo no cumple con la sintaxis correcta
-        print(Fore.RED + f"❌ Error en formato json recibido de N8N: \n\t{e}")
-        
-    else:
-        if len(json_response.get("output",[])) > 0:
-            mostrar_resultados_tabla(json_response["output"])
+        try:
+            json_response = response.json() # Tranformacion de request a json (si podemos)
             
-            while True:
-                opcion = input("\nDesea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
-                
-                if opcion == 'Y':
-                    guardar_csv(json_response)
-                    break
-                
-                elif opcion == 'N':
-                    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 40 + "!Adios¡\n")
-                    break
-                
-                else:
-                    print(Fore.RED + "❌ Error - Ingrese opcion valida.")
-                
+        except requests.exceptions.JSONDecodeError as e: # Captura de error json, causado por que el mismo no cumple con la sintaxis correcta
+            print(Fore.RED + f"❌ Error en formato json recibido de N8N: \n\t{e}")
+            
         else:
-            print(Fore.RED + "❌ No se obtuvieron resultados para su consulta")
+            if len(json_response.get("output",[])) > 0:
+                mostrar_resultados_tabla(json_response["output"])
+                
+                while True:
+                    opcion = input("\nDesea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
+                    
+                    if opcion == 'Y':
+                        guardar_csv(json_response)
+                        break
+                    
+                    elif opcion == 'N':
+                        print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 43 + "¡Adios!\n")
+                        break
+                    
+                    else:
+                        print(Fore.RED + "❌ Error - Ingrese opcion valida.")
+                    
+            else:
+                print(Fore.RED + "❌ No se obtuvieron resultados para su consulta")
 
+else:
+    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 46 + "¡Adios!\n")
 
 print("=" * 100 + "\n")
 
