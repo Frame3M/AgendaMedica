@@ -6,7 +6,7 @@ import os
 
 URL_WEBHOOK = "http://localhost:5678/webhook/75d2ed5e-0c78-4a75-ac23-632c727f1c4b" # URL de webhook en n8n
 
-init(autoreset=True)
+init(autoreset=True) # Funcion para poder colorear el texto
 
 #################################################################################
 
@@ -29,6 +29,7 @@ def generar_consulta(url, mensaje = "empty"):
         # Se retorna lo recibido por el request
         return response
     
+    # Error en la conexion
     except requests.exceptions.RequestException as e:
         print(Fore.RED + f"❌ Error de conexión con N8N: \n\t{e}")
         return None
@@ -40,7 +41,6 @@ def mostrar_resultados_tabla(json_data):
     
     tabla = PrettyTable()
     try:
-        #print(json_data)
         encabezados = list(json_data[0].keys())
         tabla.field_names = [h.upper() for h in encabezados]
         
@@ -72,11 +72,14 @@ def guardar_csv(json_data):
     
     df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json 
     df.to_csv("prueba.csv") # Creando el CSV
-    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 36 + "✅ CSV creado con exito ✅\n")
+    
+    print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 36 + "✅ CSV creado con exito ✅")
     
 #################################################################################
 
 def limpiar_terminal():
+    '''Realizar un clear screen de la terminal'''
+    
     if os.name == 'nt':
         os.system('cls')
     else:
@@ -85,6 +88,8 @@ def limpiar_terminal():
 #################################################################################
 
 def pause():
+    '''Realiza una pausa en el programa hasta que el usuario presiones enter'''
+    
     input(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + "\nPresiona " + Fore.WHITE + "enter" + Fore.LIGHTMAGENTA_EX + " para continuar...")
 
 #################################################################################
@@ -127,24 +132,21 @@ while is_running:
                         opcion = input("\nDesea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
                         
                         if opcion == 'Y':
-                            #print("=" * 100)
                             guardar_csv(json_response)
                             break
                         
                         elif opcion == 'N':
-                            #print("=" * 100)
-                            print(Fore.YELLOW + Style.BRIGHT + "\n" + " " * 41 + "- CSV no creado -\n")
+                            print(Fore.YELLOW + Style.BRIGHT + "\n" + " " * 41 + "- CSV no creado -")
                             break
                         
                         else:
                             print(Fore.RED + "❌ Error - Ingrese opcion valida.")
-                    
-                    print("=" * 100 + "\n")
-                    pause()
                         
                 else:
-                    print(Fore.RED + " "*23 + "❌ No se obtuvieron resultados para su consulta ❌")
-                    pause()
+                    print(Fore.RED + " "*24 + "❌ No se obtuvieron resultados para su consulta ❌")
+            
+            print("\n" + "=" * 100 + "\n")
+            pause() # Presiona enter para continuar
 
     else:
         print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 46 + "¡Adios!\n")
