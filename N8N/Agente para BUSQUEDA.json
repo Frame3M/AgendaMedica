@@ -3,65 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "Query"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -288,
-        -64
-      ],
-      "id": "9ea09bd9-9348-42bc-abf0-1811c4b82d72",
-      "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        -16,
-        208
-      ],
-      "id": "054ce2bf-9c48-4e9d-ac53-d46232f4e869",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "3ooSb8tzs3W5RFfE",
-          "name": "Google Gemini(PaLM) Api account 3"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "{{ $fromAI('output') }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgresTool",
-      "typeVersion": 2.6,
-      "position": [
-        128,
-        208
-      ],
-      "id": "3bf4e827-7e2e-4962-8960-35e34ac075c9",
-      "name": "QUERY",
-      "credentials": {
-        "postgres": {
-          "id": "p61ZoxiCpwO244PW",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "content": "## Agente",
         "height": 224,
         "width": 352,
@@ -73,24 +14,24 @@
         -80,
         -128
       ],
-      "id": "4252e3a7-91a2-4c7c-9223-af310497cd84",
-      "name": "Sticky Note"
+      "id": "a3188845-8740-4a1f-8524-100c681aa4c9",
+      "name": "Sticky Note4"
     },
     {
       "parameters": {
         "content": "\n",
-        "height": 208,
-        "width": 352,
+        "height": 352,
+        "width": 448,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -80,
+        -128,
         160
       ],
-      "id": "3e9454a3-5688-459c-85b4-d7c3db1c3719",
-      "name": "Sticky Note1"
+      "id": "0543ad59-35ea-4e21-b16b-50421d742d47",
+      "name": "Sticky Note5"
     },
     {
       "parameters": {
@@ -110,10 +51,90 @@
     },
     {
       "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        -64
+      ],
+      "id": "9ea09bd9-9348-42bc-abf0-1811c4b82d72",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        208
+      ],
+      "id": "a188c939-6640-4b2a-9b8f-4b9025bb36b4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dPyL50pxgl3lYk1H",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.output.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        640,
+        -80
+      ],
+      "id": "1ee90c1a-f9df-4d54-8454-889c6ccd0191",
+      "name": "Execute a SQL query",
+      "retryOnFail": false,
+      "credentials": {
+        "postgres": {
+          "id": "p61ZoxiCpwO244PW",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "### Base de datos",
+        "height": 224,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        592,
+        -128
+      ],
+      "id": "70d803e8-4586-44e5-8f7a-f36b37b0bcd1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
         "promptType": "define",
         "text": "={{ $json.Query }}",
+        "hasOutputParser": true,
         "options": {
-          "systemMessage": "Eres un asistente expeto en PostgreSQL. Tu Objetivo es:\n1. Recibir una pregunta o peticion en lenguaje natural sobre los datos de una base de datos de un hospital.\n2. Convertirla unica y exclusivamente en una instruccion SQL SELECT valida.\n3. No ejecutar nunca INSERT, UPDATE ni DELETE.\n4. Usar siempre la herramienta \"Execute a SQL query\" para ejecutar la consulta.\n5. Tras la ejecucion, devuelve los resultados en formato JSON, sin ningun texto mas agregado, simplemente la informacion que conseguiste\n6. Si no puedes conseguir informacion devuelves unicamente un JSON vacio\n\n\nA continuacion tienes la **Estructura Completa** de tu base de datos (schema DDL). Usala para conocer nombres de tablas, columnas y tipos:\n\n####################################################################\nScript de creacion de tablas para hospital\n####################################################################\n\nCREATE TABLE IF NOT EXISTS Localidad(\n  id_localidad SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Grupo_sanguineo(\n  id_grupo SERIAL PRIMARY KEY,\n  grupo VARCHAR(15) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Obra_social(\n  id_obra SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Impedimento_fisico(\n  id_impedimento SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Medicamento(\n  id_medicamento SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Alergia(\n  id_alergia SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Paciente(\n\tid_paciente SERIAL PRIMARY KEY,\n  nombre VARCHAR(100) NOT NULL,\n  apellido VARCHAR(100) NOT NULL,\n  dni INT NOT NULL,\n\tfecha_nacimiento DATE,\n\tnum_afiliado INT,\n\tnum_domicilio INT,\n\tcalle_domicilio VARCHAR(255),\n\tdepto_domicilio VARCHAR(10),\n  id_localidad INT,\n  id_grupo_sanguineo INT,\n  id_obra_social INT,\n  \n  CONSTRAINT FK_localidad FOREIGN KEY (id_localidad) REFERENCES Localidad(id_localidad),\n  CONSTRAINT FK_grupo_sanguineo FOREIGN KEY (id_grupo_sanguineo) REFERENCES Grupo_sanguineo(id_grupo),\n  CONSTRAINT FK_obra_social FOREIGN KEY (id_obra_social) REFERENCES Obra_social(id_obra)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_impedimento (\n  id_paciente INT,\n  id_impedimento INT,\n  CONSTRAINT FK_paciente_pac_imp FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_impedimento FOREIGN KEY (id_impedimento) REFERENCES Impedimento_fisico(id_impedimento),\n  CONSTRAINT PK_paciente_impedimento PRIMARY KEY (id_paciente,id_impedimento)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_medicamento (\n  id_paciente INT,\n  id_medicamento INT,\n  CONSTRAINT FK_paciente_pac_med FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_medicamento FOREIGN KEY (id_medicamento) REFERENCES Medicamento(id_medicamento),\n  CONSTRAINT PK_paciente_medicamento PRIMARY KEY (id_paciente,id_medicamento)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_alergia (\n  id_paciente INT,\n  id_alergia INT,\n  CONSTRAINT FK_paciente_pac_alerg FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_alergia FOREIGN KEY (id_alergia) REFERENCES Alergia(id_alergia),\n  CONSTRAINT PK_paciente_alergia PRIMARY KEY (id_paciente,id_alergia)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Profesional (\n\tlegajo SERIAL PRIMARY KEY,\n\tnombre VARCHAR(100) NOT NULL,\n\tapellido VARCHAR(100) NOT NULL,\n\tmatricula INT NOT NULL,\n\temail VARCHAR(255),\n\ttelefono INT,\n\tfecha_contratacion DATE NOT NULL\n);\n\nCREATE TABLE IF NOT EXISTS Especialidad (\n\tid_especialidad SERIAL PRIMARY KEY,\n\tdescripcion VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Profesional_especialidad (\n\tlegajo_profesional INT,\n\tid_especialidad INT,\n\tCONSTRAINT FK_profesional_esp FOREIGN KEY (legajo_profesional) REFERENCES Profesional (legajo),\n\tCONSTRAINT FK_especialidad_pro FOREIGN KEY (id_especialidad) REFERENCES Especialidad (id_especialidad),\n\tCONSTRAINT PK_pro_esp PRIMARY KEY (legajo_profesional,id_especialidad)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Sector (\n\tid_sector SERIAL PRIMARY KEY,\n\tletra CHAR NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Consultorio (\n\tnumero SERIAL PRIMARY KEY,\n\tid_sector INT,\n\tCONSTRAINT FK_sector_con FOREIGN KEY (id_sector) REFERENCES Sector (id_sector)\n);\n\nCREATE TABLE IF NOT EXISTS Equipamiento (\n\tid_equipamiento SERIAL PRIMARY KEY,\n\tnombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Consultorio_equipamiento (\n\tnum_consultorio INT,\n\tid_equipamiento INT,\n\tCONSTRAINT FK_consultorio_con_equip FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),\n\tCONSTRAINT FK_equipamiento_con_equip FOREIGN KEY (id_equipamiento) REFERENCES Equipamiento (id_equipamiento),\n\tCONSTRAINT PK_consultorio_equipamiento PRIMARY KEY (num_consultorio,id_equipamiento)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Estado_turno (\n\tid_estado SERIAL PRIMARY KEY,\n\testado VARCHAR(150) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Turno (\n\tid_turno SERIAL PRIMARY KEY,\n\tfecha DATE NOT NULL,\n\thora TIME NOT NULL,\n\tid_paciente INT NOT NULL,\n\tlegajo_profesional INT NOT NULL,\n\tnum_consultorio INT NOT NULL,\n\tid_estado INT NOT NULL,\n\tCONSTRAINT FK_paciente_tur FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),\n\tCONSTRAINT FK_profesional_tur FOREIGN KEY (legajo_profesional) REFERENCES Profesional (legajo),\n\tCONSTRAINT FK_consultorio_tur FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),\n\tCONSTRAINT FK_estado_tur FOREIGN KEY (id_estado) REFERENCES Estado_turno (id_estado)\n);\n\nCREATE TABLE IF NOT EXISTS Historia_clinica (\n\tid_historiaClinica SERIAL PRIMARY KEY,\n\tid_paciente INT NOT NULL,\n\tid_turno INT,\n\tfecha DATE,\n\tobservacion TEXT,\n\tCONSTRAINT FK_paciente_historia FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),\n\tCONSTRAINT FK_turno_historia FOREIGN KEY (id_turno) REFERENCES Turno (id_turno)\n);\n\n------------------------------------------------------------------------------------------------------------\n"
+          "systemMessage": "Eres un asistente expeto en PostgreSQL. Tu Objetivo es:\n1. Recibir una pregunta o peticion en lenguaje natural sobre los datos de una base de datos de un hospital.\n2. Convertirla unica y exclusivamente en una instruccion SQL SELECT valida.\n3. No ejecutar nunca INSERT, UPDATE ni DELETE.\n4. Devolver la query unicamente, sin ningun agregado mas, por ejemplo \"SELECT * FROM Profesional\".\n5. Si la solicitud se puede responder con la DB, devuelve un JSON: {\"status\": \"success\", \"sql\": \"SELECT...\"}.\n6. Si la solicitud NO tiene relación con la DB o no existe esa info, devuelve: {\"status\": \"error\", \"message\": \"No puedo responder esto con la base de datos actual\"}.\n\nA continuacion tienes la **Estructura Completa** de tu base de datos (schema DDL). Usala para conocer nombres de tablas, columnas y tipos:\n\n####################################################################\nScript de creacion de tablas para hospital\n####################################################################\n\nCREATE TABLE IF NOT EXISTS Localidad(\n  id_localidad SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Grupo_sanguineo(\n  id_grupo SERIAL PRIMARY KEY,\n  grupo VARCHAR(15) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Obra_social(\n  id_obra SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Impedimento_fisico(\n  id_impedimento SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Medicamento(\n  id_medicamento SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Alergia(\n  id_alergia SERIAL PRIMARY KEY,\n  nombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Paciente(\n\tid_paciente SERIAL PRIMARY KEY,\n  nombre VARCHAR(100) NOT NULL,\n  apellido VARCHAR(100) NOT NULL,\n  dni INT NOT NULL,\n\tfecha_nacimiento DATE,\n\tnum_afiliado INT,\n\tnum_domicilio INT,\n\tcalle_domicilio VARCHAR(255),\n\tdepto_domicilio VARCHAR(10),\n  id_localidad INT,\n  id_grupo_sanguineo INT,\n  id_obra_social INT,\n  \n  CONSTRAINT FK_localidad FOREIGN KEY (id_localidad) REFERENCES Localidad(id_localidad),\n  CONSTRAINT FK_grupo_sanguineo FOREIGN KEY (id_grupo_sanguineo) REFERENCES Grupo_sanguineo(id_grupo),\n  CONSTRAINT FK_obra_social FOREIGN KEY (id_obra_social) REFERENCES Obra_social(id_obra)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_impedimento (\n  id_paciente INT,\n  id_impedimento INT,\n  CONSTRAINT FK_paciente_pac_imp FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_impedimento FOREIGN KEY (id_impedimento) REFERENCES Impedimento_fisico(id_impedimento),\n  CONSTRAINT PK_paciente_impedimento PRIMARY KEY (id_paciente,id_impedimento)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_medicamento (\n  id_paciente INT,\n  id_medicamento INT,\n  CONSTRAINT FK_paciente_pac_med FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_medicamento FOREIGN KEY (id_medicamento) REFERENCES Medicamento(id_medicamento),\n  CONSTRAINT PK_paciente_medicamento PRIMARY KEY (id_paciente,id_medicamento)\n);\n\nCREATE TABLE IF NOT EXISTS Paciente_alergia (\n  id_paciente INT,\n  id_alergia INT,\n  CONSTRAINT FK_paciente_pac_alerg FOREIGN KEY (id_paciente) REFERENCES Paciente(id_paciente),\n  CONSTRAINT FK_alergia FOREIGN KEY (id_alergia) REFERENCES Alergia(id_alergia),\n  CONSTRAINT PK_paciente_alergia PRIMARY KEY (id_paciente,id_alergia)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Profesional (\n\tlegajo SERIAL PRIMARY KEY,\n\tnombre VARCHAR(100) NOT NULL,\n\tapellido VARCHAR(100) NOT NULL,\n\tmatricula INT NOT NULL,\n\temail VARCHAR(255),\n\ttelefono INT,\n\tfecha_contratacion DATE NOT NULL\n);\n\nCREATE TABLE IF NOT EXISTS Especialidad (\n\tid_especialidad SERIAL PRIMARY KEY,\n\tdescripcion VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Profesional_especialidad (\n\tlegajo_profesional INT,\n\tid_especialidad INT,\n\tCONSTRAINT FK_profesional_esp FOREIGN KEY (legajo_profesional) REFERENCES Profesional (legajo),\n\tCONSTRAINT FK_especialidad_pro FOREIGN KEY (id_especialidad) REFERENCES Especialidad (id_especialidad),\n\tCONSTRAINT PK_pro_esp PRIMARY KEY (legajo_profesional,id_especialidad)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Sector (\n\tid_sector SERIAL PRIMARY KEY,\n\tletra CHAR NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Consultorio (\n\tnumero SERIAL PRIMARY KEY,\n\tid_sector INT,\n\tCONSTRAINT FK_sector_con FOREIGN KEY (id_sector) REFERENCES Sector (id_sector)\n);\n\nCREATE TABLE IF NOT EXISTS Equipamiento (\n\tid_equipamiento SERIAL PRIMARY KEY,\n\tnombre VARCHAR(255) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Consultorio_equipamiento (\n\tnum_consultorio INT,\n\tid_equipamiento INT,\n\tCONSTRAINT FK_consultorio_con_equip FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),\n\tCONSTRAINT FK_equipamiento_con_equip FOREIGN KEY (id_equipamiento) REFERENCES Equipamiento (id_equipamiento),\n\tCONSTRAINT PK_consultorio_equipamiento PRIMARY KEY (num_consultorio,id_equipamiento)\n);\n\n------------------------------------------------------------------------------------------------------------\n\nCREATE TABLE IF NOT EXISTS Estado_turno (\n\tid_estado SERIAL PRIMARY KEY,\n\testado VARCHAR(150) NOT NULL UNIQUE\n);\n\nCREATE TABLE IF NOT EXISTS Turno (\n\tid_turno SERIAL PRIMARY KEY,\n\tfecha DATE NOT NULL,\n\thora TIME NOT NULL,\n\tid_paciente INT NOT NULL,\n\tlegajo_profesional INT NOT NULL,\n\tnum_consultorio INT NOT NULL,\n\tid_estado INT NOT NULL,\n\tCONSTRAINT FK_paciente_tur FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),\n\tCONSTRAINT FK_profesional_tur FOREIGN KEY (legajo_profesional) REFERENCES Profesional (legajo),\n\tCONSTRAINT FK_consultorio_tur FOREIGN KEY (num_consultorio) REFERENCES Consultorio (numero),\n\tCONSTRAINT FK_estado_tur FOREIGN KEY (id_estado) REFERENCES Estado_turno (id_estado)\n);\n\nCREATE TABLE IF NOT EXISTS Historia_clinica (\n\tid_historiaClinica SERIAL PRIMARY KEY,\n\tid_paciente INT NOT NULL,\n\tid_turno INT,\n\tfecha DATE,\n\tobservacion TEXT,\n\tCONSTRAINT FK_paciente_historia FOREIGN KEY (id_paciente) REFERENCES Paciente (id_paciente),\n\tCONSTRAINT FK_turno_historia FOREIGN KEY (id_turno) REFERENCES Turno (id_turno)\n);\n\n------------------------------------------------------------------------------------------------------------\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -122,8 +143,235 @@
         -16,
         -64
       ],
-      "id": "b7cc098a-1ea8-45f9-9d9f-471daf4c29cf",
+      "id": "359b9423-2784-46f2-858f-16ebc80742a0",
       "name": "Search Agent"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.status }}",
+                    "rightValue": "Success",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "de5d536b-cdf6-42af-8aee-131fe0b2fcc4"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Success"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ad36c8b7-cfec-4572-bd4b-d3ca55f103b3",
+                    "leftValue": "={{ $json.output.status }}",
+                    "rightValue": "Error",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Error"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        384,
+        -64
+      ],
+      "id": "03973496-5180-4784-aa5a-f269797c6f0c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        48,
+        352
+      ],
+      "id": "18248d96-57b4-46c3-9313-aa13dcbe29a7",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a8a5ba2d-df38-4ca5-aeba-f6465ac49917",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        -80
+      ],
+      "id": "4a6af3d3-1467-440d-ae94-7dcf045b03e6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -64
+      ],
+      "id": "1fce965b-4a0e-4eed-ad0f-97b6c9622913",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"output\": \"[]\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        224
+      ],
+      "id": "38a624be-59e8-4a71-a687-4613ee560f1e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "### Detector de error",
+        "height": 224,
+        "width": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -128
+      ],
+      "id": "2f0e9236-003b-45b8-b053-db1fe4bff750",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Detector de error",
+        "height": 224,
+        "width": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -128
+      ],
+      "id": "74140eec-d4ee-4f4d-9d7e-060d92702d5e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Salida Vacia",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        160
+      ],
+      "id": "c72ca00c-d88a-43f8-ab04-c534fe9dafca",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Salida",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        -128
+      ],
+      "id": "432ab765-fcea-4b27-a492-8a08645fbb3c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"status\": {\n\t\t\t\"type\": \"string\",\n            \"description\": \"Enrutamiento: 'Success' si se logro realizar una query correctamente; 'Error' si no se pudo realizar una query con normalidad\",\n            \"enum\": [\"Success\", \"Error\"]\n\t\t},\n\t\t\"query\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"descripcion\": \"query formada en base a la consulta solicitada\"\n\t\t}\n\t},\n    \"required\": [\"status\",\"query\"],\n    \"additionalProperties\": false\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        208
+      ],
+      "id": "c5900ee1-9284-4b22-bdb3-31d0a34fca2d",
+      "name": "Output Parser"
     }
   ],
   "pinData": {},
@@ -150,12 +398,81 @@
         ]
       ]
     },
-    "QUERY": {
-      "ai_tool": [
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
         [
           {
             "node": "Search Agent",
-            "type": "ai_tool",
+            "type": "ai_outputParser",
             "index": 0
           }
         ]
@@ -166,7 +483,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a2f0cc4b-3523-4e21-aa69-d708c3b0c8af",
+  "versionId": "5cd40a6a-1595-47d1-ac4c-da8e470cd47e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
