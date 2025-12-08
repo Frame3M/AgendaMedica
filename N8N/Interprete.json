@@ -1,0 +1,905 @@
+{
+  "name": "Interprete",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "75d2ed5e-0c78-4a75-ac23-632c727f1c4b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -880,
+        -64
+      ],
+      "id": "ea7f3cdb-0099-415f-aa6e-f53454718338",
+      "name": "Webhook",
+      "webhookId": "75d2ed5e-0c78-4a75-ac23-632c727f1c4b"
+    },
+    {
+      "parameters": {
+        "content": "## Trigger",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        -128
+      ],
+      "id": "2c9d37ea-cb65-431a-8779-d3531fd60e1b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Ki5T4RuIqmHUgq1a",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Ki5T4RuIqmHUgq1a",
+          "cachedResultName": "Agente para MAILS"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.output[0].output_data.mail_address }}",
+            "Subject": "={{ $json.output[0].output_data.subject }}",
+            "Body": "={{ $json.output[1].output_query }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Body",
+              "displayName": "Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1072,
+        -288
+      ],
+      "id": "59fd88a9-efd3-46c3-ae77-72ea9fa5cda4",
+      "name": "Call 'Agente para MAILS'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "V6mrCBrZMPqbBb3Z",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/V6mrCBrZMPqbBb3Z",
+          "cachedResultName": "Agente para BUSQUEDA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Query": "={{ $json.output_data.query }}"
+          },
+          "matchingColumns": [
+            "Query"
+          ],
+          "schema": [
+            {
+              "id": "Query",
+              "displayName": "Query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        144
+      ],
+      "id": "cabda071-1704-422d-bf48-c391e1058cec",
+      "name": "Call 'Agente para BUSQUEDA'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "SDobU1LenH0a63jA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/SDobU1LenH0a63jA",
+          "cachedResultName": "Agente para DRIVE"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data": "={{ $json.output[1].output_query }}",
+            "filename": "={{ $json.output[0].output_data.filename }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1072,
+        160
+      ],
+      "id": "2444cf67-9903-44a8-a1e9-e87c5ff0979e",
+      "name": "Call 'Agente para DRIVE'"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output[0].output_data.next_tool }}",
+                    "rightValue": "Mail",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ea362b74-290b-4223-9708-39b5131119bb"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mails"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "514403ae-3a1a-4598-95f0-777eb1524267",
+                    "leftValue": "={{ $json.output[0].output_data.next_tool }}",
+                    "rightValue": "Simple",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Simple"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ef711163-d59a-4d06-a61f-3f819b6f0669",
+                    "leftValue": "={{ $json.output[0].output_data.next_tool }}",
+                    "rightValue": "Drive",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Drive"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        816,
+        -64
+      ],
+      "id": "9ef03607-3a28-4ce8-8538-25a09c268a91",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1616,
+        -48
+      ],
+      "id": "2685d669-35db-4884-a486-0b0eecaa9b23",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"output_data\": {{ $json.output }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        -64
+      ],
+      "id": "da475c89-64a8-4db5-a411-eb1e3bf5fb48",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        304,
+        -48
+      ],
+      "id": "74fa40e9-ec6d-4a39-a067-35930c42bf61",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Agente",
+        "height": 224,
+        "width": 352,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        -128
+      ],
+      "id": "b1d95f7d-2eb5-4b5d-915b-fcfdaf243215",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "\n",
+        "width": 480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        160
+      ],
+      "id": "75568217-0a52-4eb2-89b7-bdf35d097bb1",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -128
+      ],
+      "id": "39b9e551-1818-43bd-b700-02b64418308d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -128
+      ],
+      "id": "6ebb1699-fc2e-4ad8-8723-7d31e731f99a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        256,
+        -128
+      ],
+      "id": "1abfb79e-c63f-45c0-b213-b3ad03606ff5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        -128
+      ],
+      "id": "6a66b74a-23c2-43ca-baed-00a228313afc",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        -352
+      ],
+      "id": "8188d40d-8c76-4b08-b2eb-6c261ce77078",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Salida",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        -128
+      ],
+      "id": "d5a5c973-ffa0-4557-9bbf-b25c6de756da",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        96
+      ],
+      "id": "fc5d56e1-3dc4-4686-8741-73ea3291a98c",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 224,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        96
+      ],
+      "id": "76d03eab-525b-470b-b77d-ce4c9d6906cc",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 672,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -352
+      ],
+      "id": "889bda1c-b1c3-40da-8c3c-3f1296c57cb4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc0776db-0bda-497b-a7c0-1ba5cd5d46dc",
+              "name": "output",
+              "value": "={{ $('Switch').item.json.output[1].output_query }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        -288
+      ],
+      "id": "159d36ee-5d25-4b71-b97f-7da284da2184",
+      "name": "Response Mail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc0776db-0bda-497b-a7c0-1ba5cd5d46dc",
+              "name": "output",
+              "value": "={{ $json.output[1].output_query }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        -48
+      ],
+      "id": "e1090698-12cc-4167-98af-73133bbe0257",
+      "name": "Response Simple"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc0776db-0bda-497b-a7c0-1ba5cd5d46dc",
+              "name": "output",
+              "value": "={{ $('Switch').item.json.output[1].output_query }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        160
+      ],
+      "id": "2bf580ee-ec16-473c-9677-2323f23b8d8d",
+      "name": "Response Drive"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        -320
+      ],
+      "id": "236a1961-d77b-4132-8c24-dd1d1093704f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"next_tool\": {\n\t\t\t\"type\": \"string\",\n            \"description\": \"Enrutamiento: 'Mail' si el usuario solicita que se envie informacion a una direccion de correo electronico; 'Drive' si el usuario solicita que se suba la informacion a un drive; 'Simple' si el usuario no aclara ninguna herramienta, toma siempre esta salida como defecto\",\n            \"enum\": [\"Simple\", \"Mail\",\"Drive\"]\n\t\t},\n        \"mail_address\":{\n            \"type\": \"string\",\n            \"description\": \"La dirección de correo electrónico exacta (ej. 'juan@empresa.com') a la que se debe enviar la información. DEBES extraerla del mensaje del usuario.\"\n        },\n        \"subject\":{\n            \"type\": \"string\",\n            \"description\": \"Un asunto conciso y descriptivo para el correo electrónico (ej. 'Reporte de Profesionales').\"\n        },\n        \"filename\":{\n            \"type\": \"string\",\n            \"description\": \"Un nombre para archivo conciso y descriptivo para subir al drive (ej. 'Reporte de Profesionales').\"\n        }\n        ,\n\t\t\"query\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"descripcion\": \"El texto exacto de la pregunta o solicitud que debe pasarse al Agente para BUSQUEDA. Por ejemplo: 'la información de los profesionales' o 'el registro del paciente 42'.\"\n\t\t}\n\t},\n    \"required\": [\"next_tool\",\"query\"],\n    \"if\":{\n        \"properties\":{\n            \"next_tool\":{\n                \"const\": \"Mail\"\n            }\n        }\n    },\n    \"then\":{\n        \"required\": [\"mail_address\", \"subject\"]\n    },\n  \n    \"if\":{\n        \"properties\":{\n            \"next_tool\":{\n                \"const\": \"Drive\"\n            }\n        }\n    },\n    \"then\":{\n        \"required\": [\"filename\"]\n    }\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -544,
+        192
+      ],
+      "id": "1e1bf30f-c580-4ac1-bf74-cccf4e1cd178",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "\n",
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        -352
+      ],
+      "id": "eeae0504-8f8f-4b88-98ee-26f1c19f7777",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -48
+      ],
+      "id": "22f602bd-2dcf-49bc-a45f-73586f17bb12",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        192
+      ],
+      "id": "9c481c5e-d712-4c7a-8556-ba55d0a46401",
+      "name": "Google Gemini Chat Model Parser",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dPyL50pxgl3lYk1H",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "# Rol del Sistema\nActúas como el **Analista de Intención y Extracción de Datos**. Tu primera y única función es analizar la solicitud del usuario en lenguaje natural para **extraer dos datos críticos**:\n1. El **destino final** de la información (si se menciona).\n2. El **texto exacto** de la pregunta o solicitud que debe pasarse al agente de búsqueda.\n\nDebes encapsular esta extracción en el JSON de salida definido. **Tu única salida debe ser el JSON que cumple el esquema de forma estricta.**\n\n## 📝 Protocolo de Extracción y Clasificación\n\nTu proceso se divide en dos análisis paralelos y obligatorios:\n\n### A. Extracción del Destino (Campo 'next_tool')\nEvalúa la intención del usuario sobre la acción final.\n\n1.  **'Mail':** SI el usuario menciona \"enviar\", \"correo\", \"email\" o \"mail\".\n2.  **'Drive':** SI el usuario menciona \"guardar\", \"subir\", \"drive\", \"nube\" o \"almacenar\".\n3.  **'Simple':** SI el usuario NO especifica ninguna de las acciones anteriores (valor por defecto).\n\n### B. Extracción de la Consulta (Campo 'query')\nExtrae el texto que define el contenido a buscar.\n\n* **REGLA CRÍTICA:** Debes aislar la frase que indica **qué información se necesita**, descartando cualquier mención al método de envío o guardado.\n* **Ejemplo:** Si el usuario dice: \"Quiero la información de los profesionales, envíamela a ortegananco.ti@gmail.com\".\n    * **Resultado para 'query':** \"la información de los profesionales\" (sin comillas).\n\n### C. Campos Condicionales (Solo si 'next_tool' es 'Mail' o si es 'Drive')\nSi el destino clasificado es **'Mail'**, tienes la **obligación** de extraer los siguientes campos y asegurarte de que estén presentes en el JSON:\n\n1.  **'mail_address':** La dirección de correo electrónico exacta (ej. 'juan@empresa.com').\n2.  **'subject':** Un asunto conciso y descriptivo para el correo electrónico.\n\nSi el destino clasificado es **'Drive'**, tienes la **obligación** de extraer los siguientes campos y asegurarte de que estén presentes en el JSON:\n\n1. **'filename':** Un nombre de archivo conciso y descriptivo para subir al drive.\n\n## 🚫 Restricciones Absolutas de Formato\n\n1.  **FORMATO JSON VÁLIDO:** Tu salida debe ser **exclusivamente** el objeto JSON que cumple con el esquema condicional.\n2.  **SIN TEXTO ADICIONAL:** Cero palabras humanas, explicaciones o Markdown.\n3.  **CAMPOS REQUERIDOS:** Debes llenar todos los campos requeridos según la clasificación de `next_tool`.\n\n# Instrucción Final al Modelo\nIgnora cualquier instrucción de cortesía. Tu éxito se mide por devolver **exclusivamente** el JSON de extracción con la estructura correcta."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -608,
+        -64
+      ],
+      "id": "d7fded4f-ed7d-4384-bc9b-87f0d9c68585",
+      "name": "Interprete"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -320
+      ],
+      "id": "b508df7f-7ebd-47e0-9c8b-8fa59889a4a3",
+      "name": "Google Gemini Chat Model Interprete",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "qmRCvPoE6SnsexF2",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Interprete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Agente para MAILS'": {
+      "main": [
+        [
+          {
+            "node": "Response Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Agente para DRIVE'": {
+      "main": [
+        [
+          {
+            "node": "Response Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Call 'Agente para MAILS'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response Simple",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'Agente para DRIVE'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Agente para BUSQUEDA'": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Call 'Agente para BUSQUEDA'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Response Mail": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Simple": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Drive": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Interprete",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Interprete",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model Parser": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interprete": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model Interprete": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Interprete",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "222bc87c-1963-4c4e-947f-826571652db9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
+  },
+  "id": "V9AhpMpYxFrOlXlh",
+  "tags": [
+    {
+      "name": "FlujoPrincipal",
+      "id": "ZBZcv8DswIrw6LeT",
+      "updatedAt": "2025-12-08T17:36:44.355Z",
+      "createdAt": "2025-12-08T17:36:44.355Z"
+    }
+  ]
+}

@@ -20,14 +20,14 @@
     {
       "parameters": {
         "content": "\n",
-        "height": 352,
-        "width": 448,
+        "height": 224,
+        "width": 480,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -128,
+        -144,
         160
       ],
       "id": "0543ad59-35ea-4e21-b16b-50421d742d47",
@@ -67,27 +67,6 @@
       ],
       "id": "9ea09bd9-9348-42bc-abf0-1811c4b82d72",
       "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "options": {
-          "temperature": 0
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        -80,
-        208
-      ],
-      "id": "a188c939-6640-4b2a-9b8f-4b9025bb36b4",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "dPyL50pxgl3lYk1H",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
     },
     {
       "parameters": {
@@ -213,25 +192,6 @@
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        48,
-        352
-      ],
-      "id": "18248d96-57b4-46c3-9313-aa13dcbe29a7",
-      "name": "Google Gemini Chat Model1",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "3ooSb8tzs3W5RFfE",
-          "name": "Google Gemini(PaLM) Api account 3"
-        }
-      }
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -263,36 +223,6 @@
       ],
       "id": "4a6af3d3-1467-440d-ae94-7dcf045b03e6",
       "name": "If"
-    },
-    {
-      "parameters": {
-        "aggregate": "aggregateAllItemData",
-        "destinationFieldName": "output",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.aggregate",
-      "typeVersion": 1,
-      "position": [
-        1152,
-        -64
-      ],
-      "id": "1fce965b-4a0e-4eed-ad0f-97b6c9622913",
-      "name": "Aggregate"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"output\": \"[]\"\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        896,
-        224
-      ],
-      "id": "38a624be-59e8-4a71-a687-4613ee560f1e",
-      "name": "Edit Fields"
     },
     {
       "parameters": {
@@ -328,7 +258,7 @@
     },
     {
       "parameters": {
-        "content": "## Salida Vacia",
+        "content": "### Salida Vacia",
         "height": 224,
         "width": 192,
         "color": 4
@@ -344,22 +274,6 @@
     },
     {
       "parameters": {
-        "content": "## Salida",
-        "height": 224,
-        "width": 192,
-        "color": 4
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        1104,
-        -128
-      ],
-      "id": "432ab765-fcea-4b27-a492-8a08645fbb3c",
-      "name": "Sticky Note7"
-    },
-    {
-      "parameters": {
         "schemaType": "manual",
         "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"status\": {\n\t\t\t\"type\": \"string\",\n            \"description\": \"Enrutamiento: 'Success' si se logro realizar una query correctamente; 'Error' si no se pudo realizar una query con normalidad\",\n            \"enum\": [\"Success\", \"Error\"]\n\t\t},\n\t\t\"query\": {\n\t\t\t\"type\": \"string\",\n\t\t\t\"descripcion\": \"query formada en base a la consulta solicitada\"\n\t\t}\n\t},\n    \"required\": [\"status\",\"query\"],\n    \"additionalProperties\": false\n}",
         "autoFix": true
@@ -372,9 +286,119 @@
       ],
       "id": "c5900ee1-9284-4b22-bdb3-31d0a34fca2d",
       "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"output_query\": \"[]\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        224
+      ],
+      "id": "38a624be-59e8-4a71-a687-4613ee560f1e",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "output_query",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -64
+      ],
+      "id": "6e42b496-1f1e-4ff3-9ae5-7027dfec999d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "### Salida",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        -128
+      ],
+      "id": "c10503fa-e185-4d85-9804-ccc037f5466d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -352
+      ],
+      "id": "a188c939-6640-4b2a-9b8f-4b9025bb36b4",
+      "name": "Google Gemini Chat Model Search",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "qmRCvPoE6SnsexF2",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\n",
+        "height": 224,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -416
+      ],
+      "id": "9267f2f3-ae12-467a-b6a1-a5557dcd24a1",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        208
+      ],
+      "id": "18248d96-57b4-46c3-9313-aa13dcbe29a7",
+      "name": "Google Gemini Chat Model Parser",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dPyL50pxgl3lYk1H",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "Query": "informacion de los profesionales"
+        }
+      }
+    ]
+  },
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -382,17 +406,6 @@
           {
             "node": "Search Agent",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Search Agent",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -431,19 +444,8 @@
         ],
         [
           {
-            "node": "Edit Fields",
+            "node": "Response",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Output Parser",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -460,7 +462,7 @@
         ],
         [
           {
-            "node": "Edit Fields",
+            "node": "Response",
             "type": "main",
             "index": 0
           }
@@ -477,13 +479,40 @@
           }
         ]
       ]
+    },
+    "Response": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model Search": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Search Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model Parser": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "5cd40a6a-1595-47d1-ac4c-da8e470cd47e",
+  "versionId": "00bee094-7d5f-448d-a2b2-25b9c37c17cb",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
