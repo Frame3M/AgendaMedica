@@ -19,6 +19,8 @@ init(autoreset=True) # Funcion para poder colorear el texto
 def generar_consulta(url, mensaje = "empty"):
     '''Envía la solicitud de datos al n8n y espera la respuesta.'''
     
+    console = Console()
+    
     # Json para enviar a el post (por ahora unicamente mensaje)
     json_body = {
         "message": mensaje
@@ -37,7 +39,7 @@ def generar_consulta(url, mensaje = "empty"):
     
     # Error en la conexion
     except requests.exceptions.RequestException as e:
-        print(Fore.RED + f"❌ Error de conexión con N8N: \n\t{e}")
+        console.print(Text(f"❌ Error de conexión con N8N: \n\t{e}", style="bold bright_red"))
         return None
 
 #################################################################################
@@ -69,7 +71,6 @@ def guardar_csv(json_data):
     df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json 
     df.to_csv("prueba.csv") # Creando el CSV
     
-    #print(Fore.GREEN + Style.BRIGHT + "\n" + " " * 36 + "✅ CSV creado con exito ✅")
     console.print(Text("\n✅ CSV creado con exito ✅", style="bold green1 "), justify="center")
     
 #################################################################################
@@ -87,34 +88,12 @@ def limpiar_terminal():
 def pause():
     '''Realiza una pausa en el programa hasta que el usuario presiones enter'''
     
-    input(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + "\nPresiona " + Fore.WHITE + "enter" + Fore.LIGHTMAGENTA_EX + " para continuar...")
+    console = Console()
+    
+    #input(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + "\nPresiona " + Fore.WHITE + "enter" + Fore.LIGHTMAGENTA_EX + " para continuar...")
+    input(Text("\nPresiona ", style="bold magenta") + Text("enter", style="bold") + Text(" para continuar...", style="bold magenta"))
 
 #################################################################################
-
-def centrar_linea(linea):
-    """Centra una sola línea de texto en el ancho actual de la terminal."""
-    try:
-        ancho = shutil.get_terminal_size().columns
-    except OSError:
-        # En caso de error, usamos un ancho predeterminado
-        ancho = 80 
-    
-    # Imprime la línea centrada
-    print(linea.center(ancho))
-    
-def centrar_texto_largo(texto):
-    """Ajusta y centra un bloque de texto largo."""
-    try:
-        ancho = shutil.get_terminal_size().columns
-    except OSError:
-        ancho = 80
-
-    # textwrap.wrap() divide el texto en líneas que no exceden el ancho
-    lineas_ajustadas = textwrap.wrap(texto, width=ancho)
-    
-    # Centra e imprime cada línea ajustada
-    for linea in lineas_ajustadas:
-        print(linea.center(ancho))
         
 def mostrar_decorado_completo(caracter="="):
     """Imprime una línea que ocupa todo el ancho de la terminal con el carácter especificado."""
@@ -171,6 +150,8 @@ while is_running:
                     
                     mostrar_decorado_completo("=")
                     
+                    print("\n")
+                    
                     while True:
                         opcion = input("Desea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
                         
@@ -184,7 +165,8 @@ while is_running:
                             break
                         
                         else:
-                            print(Fore.RED + "❌ Error - Ingrese opcion valida.")
+                            #print(Fore.RED + "❌ Error - Ingrese opcion valida.")
+                            console.print(Text("❌ Error - Ingrese opcion valida.", style="bold bright_red"))
                         
                 else:
                     console.print(Text("❌ No se obtuvieron resultados para su consulta ❌", style="bold bright_red"), justify="center")
