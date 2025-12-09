@@ -4,7 +4,6 @@ from colorama import Fore, Style, init
 import os
 import shutil
 import time
-import textwrap
 
 from rich.console import Console
 from rich.table import Table
@@ -83,15 +82,11 @@ def limpiar_terminal():
     else:
         os.system('clear')
 
-#################################################################################
-
 def pause():
     '''Realiza una pausa en el programa hasta que el usuario presiones enter'''
     
     console = Console()
-    
-    #input(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + "\nPresiona " + Fore.WHITE + "enter" + Fore.LIGHTMAGENTA_EX + " para continuar...")
-    input(Text("\nPresiona ", style="bold magenta") + Text("enter", style="bold") + Text(" para continuar...", style="bold magenta"))
+    console.input(Text("\nPresiona ", style="bold magenta") + Text("enter", style="bold white") + Text(" para continuar...", style="bold magenta"))
 
 #################################################################################
         
@@ -117,14 +112,14 @@ while is_running:
     console.print(Text("🏥 Puedes solicitar todo tipo de informacion de el Hospital 🗄️\n", style="bold"), justify="center")
     console.print(Text("Incluso puedes pedir que se envie a GMAIL o se suba a DRIVE 📨\n", style="bold"), justify="center")
     console.print(Text("Para salir ingresa", style="bold") + Text(" exit ", style="bold magenta") + Text("😊\n"), justify="center")
-
+    
     mensaje = input("Que desea consultar: " + Fore.LIGHTGREEN_EX + "").lower() # Mensaje para enviar a N8N
     
     if mensaje != "exit":
         
         console.print(Text("\n📡 Enviando solicitud de consulta a N8N... 📡\n", style="bold dodger_blue1"), justify="center")
 
-        tiempo_inicio = time.perf_counter()
+        tiempo_inicio = time.perf_counter() # Estableciendo punto inicial de medicion de tiempo
         response = generar_consulta(URL_WEBHOOK, mensaje) # Respuesta recibida en formato REQUEST
         
         if response != None: # Si recibimos algo (no ocurrio ningun error) continuamos
@@ -138,10 +133,20 @@ while is_running:
             else:
                 if len(json_response.get("output",[])) > 0:
                     
-                    tiempo_fin = time.perf_counter()
-                    tiempo_transcurrido = tiempo_fin - tiempo_inicio
+                    tiempo_fin = time.perf_counter() # Estableciendo punto final de medicion de tiempo
+                    tiempo_transcurrido = tiempo_fin - tiempo_inicio # Tiempo total en responder la consulta
                     
-                    console.print(Text(f"Tiempo de consulta: {tiempo_transcurrido:.2f} sg.\n", style="bold dodger_blue1"), justify="center")
+                    color_tiempo = "bold white"
+                    
+                    if tiempo_transcurrido <= 5:
+                        color_tiempo = "bold green1"
+                    if tiempo_transcurrido <= 15:
+                        color_tiempo = "bold yellow1"
+                    else:
+                        color_tiempo = "bold bright_red"
+                    
+                    
+                    console.print(Text("Tiempo de consulta: ", style="bold dodger_blue1") + Text(f"{tiempo_transcurrido:.2f} sg.\n", style=color_tiempo), justify="center")
                     
                     mostrar_decorado_completo("=")
                     
@@ -149,8 +154,6 @@ while is_running:
                     mostrar_resultados_tabla_rich(json_response["output"])
                     
                     mostrar_decorado_completo("=")
-                    
-                    print("\n")
                     
                     while True:
                         opcion = input("Desea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
@@ -165,7 +168,6 @@ while is_running:
                             break
                         
                         else:
-                            #print(Fore.RED + "❌ Error - Ingrese opcion valida.")
                             console.print(Text("❌ Error - Ingrese opcion valida.", style="bold bright_red"))
                         
                 else:
