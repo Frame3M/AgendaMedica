@@ -4,6 +4,7 @@ from colorama import Fore, Style, init
 import os
 import shutil
 import time
+import datetime
 
 from rich.console import Console
 from rich.table import Table
@@ -67,10 +68,16 @@ def mostrar_resultados_tabla_rich(json_data):
 def guardar_csv(json_data):
     '''Recibe datos en formato json y los guarda en un csv'''
     
-    df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json 
-    df.to_csv("prueba.csv") # Creando el CSV
+    ahora = datetime.datetime.now()
+    fecha_str = ahora.strftime("%Y-%m-%d")
+    hora_str = ahora.strftime("%H-%M-%S")
+    path_file = f"./save_data/data_{fecha_str}_{hora_str}.csv"
+    
+    df = pd.json_normalize(json_data,record_path="output") # Creando dataframe en base al json
+    df.to_csv(path_file) # Creando el CSV
     
     console.print(Text("\n✅ CSV creado con exito ✅", style="bold green1 "), justify="center")
+    console.print(Text(f"Guardado en {path_file}", style="bold green1 "), justify="center")
     
 #################################################################################
 
@@ -140,7 +147,7 @@ while is_running:
                     
                     if tiempo_transcurrido <= 5:
                         color_tiempo = "bold green1"
-                    if tiempo_transcurrido <= 15:
+                    elif tiempo_transcurrido <= 15:
                         color_tiempo = "bold yellow1"
                     else:
                         color_tiempo = "bold bright_red"
@@ -154,6 +161,8 @@ while is_running:
                     mostrar_resultados_tabla_rich(json_response["output"])
                     
                     mostrar_decorado_completo("=")
+                    
+                    print("\n")
                     
                     while True:
                         opcion = input("Desea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
