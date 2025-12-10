@@ -162,8 +162,6 @@ while is_running:
                     
                     mostrar_decorado_completo("=")
                     
-                    print("\n")
-                    
                     while True:
                         opcion = input("Desea crear un csv con los resultados? (Y/N): ").upper() # Consulta para guardar los resultados
                         

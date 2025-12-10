@@ -93,7 +93,7 @@
       "parameters": {
         "sendTo": "={{ $('When Executed by Another Workflow').item.json.Email }}",
         "subject": "={{ $('When Executed by Another Workflow').item.json.Subject }}",
-        "message": "=<div style=\"text-align: center; padding-bottom: 20px;\">\n    <img src=\"https://drive.usercontent.google.com/download?id=1EO85ctQz1vSIsCZxBOy3eIiXSdE2h4-l&authuser=0\" \n         alt=\"Logo de tu Empresa\" \n         style=\"max-width: 350px; height: auto; display: block; margin: 0 auto;\">\n</div>\n<hr style=\"border: 0; border-top: 1px solid #eee; margin-bottom: 20px;\">",
+        "message": "=<div style=\"text-align: center; padding-bottom: 20px;\">\n    <img src=\"https://drive.usercontent.google.com/download?id=1EO85ctQz1vSIsCZxBOy3eIiXSdE2h4-l&authuser=0\" \n         alt=\"Logo CheckinMed\" \n         style=\"max-width: 350px; height: auto; display: block; margin: 0 auto;\">\n</div>\n<hr style=\"border: 0; border-top: 1px solid #eee; margin-bottom: 20px;\">",
         "options": {
           "appendAttribution": false,
           "attachmentsUi": {
@@ -121,7 +121,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "headerRow": true
+        }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
@@ -163,17 +165,7 @@
       "name": "Sticky Note6"
     }
   ],
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {
-          "Email": "ortegamarco.it@gmail.com",
-          "Subject": "Informacion del profesional con legajo 3",
-          "Body": "[{\"legajo\":3,\"nombre\":\"Santiago\",\"apellido\":\"Rodríguez\",\"matricula\":34567,\"email\":\"srodriguez@example.com\",\"telefono\":1156789012,\"fecha_contratacion\":\"2012-11-03T00:00:00.000Z\"}]"
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -229,7 +221,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "dc39cbe3-24fd-462b-b413-a5d2d932e37b",
+  "versionId": "3ad8a33b-7420-49fe-8366-fe1c87edce4b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"

@@ -68,8 +68,7 @@
         192
       ],
       "id": "cea3a91f-8513-41e0-84a9-ae27ae66f87c",
-      "name": "Convert to File",
-      "onError": "continueRegularOutput"
+      "name": "Convert to File"
     },
     {
       "parameters": {
@@ -167,26 +166,7 @@
       "name": "Split Out"
     }
   ],
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {
-          "Data": [
-            {
-              "legajo": 3,
-              "nombre": "Santiago",
-              "apellido": "Rodríguez",
-              "matricula": 34567,
-              "email": "srodriguez@example.com",
-              "telefono": 1156789012,
-              "fecha_contratacion": "2012-11-03T00:00:00.000Z"
-            }
-          ],
-          "filename": "informacion"
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -237,7 +217,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e8be13e1-79ad-4c00-b2d1-2df0d204b03a",
+  "versionId": "7632d8f3-8e05-4382-984d-c4cb56612a6a",
   "meta": {
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
   },
