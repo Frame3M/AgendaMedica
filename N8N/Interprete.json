@@ -675,8 +675,8 @@
       "name": "Google Gemini Chat Model Interprete",
       "credentials": {
         "googlePalmApi": {
-          "id": "5uMTJy6gAPU6PkXz",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
         }
       }
     }
@@ -888,7 +888,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "be584912-4490-49b3-ab3f-8fc263dd364b",
+  "versionId": "51569636-79dc-47aa-bcb2-5b811cde325c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"

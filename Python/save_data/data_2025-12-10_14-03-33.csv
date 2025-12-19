@@ -1,5 +1,0 @@
-,id_turno,fecha,hora,nombre_paciente,apellido_paciente,dni_paciente,profesional,matricula_profesional,especialidades_profesional,num_consultorio,sector_consultorio,estado_turno
-0,5,2025-02-17T00:00:00.000Z,10:30:00,Priscila,Escolano,49927088,Molina,66778,Dermatología,15,A,Cancelado
-1,12,2025-03-14T00:00:00.000Z,16:00:00,Crescencia,Pomares,20718199,Gómez,78901,"Neurología, Gastroenterología",12,B,Cancelado
-2,16,2025-07-19T00:00:00.000Z,15:00:00,Luciano,Herrera,40729186,González,12345,Psiquiatría,16,C,Cancelado
-3,20,2025-11-20T00:00:00.000Z,09:15:00,Gabriel,Silva,24518739,Ruiz,11223,Pediatría,20,A,Cancelado

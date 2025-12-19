@@ -349,8 +349,8 @@
       "name": "Google Gemini Chat Model Search",
       "credentials": {
         "googlePalmApi": {
-          "id": "5uMTJy6gAPU6PkXz",
-          "name": "Google Gemini(PaLM) Api account 2"
+          "id": "3ooSb8tzs3W5RFfE",
+          "name": "Google Gemini(PaLM) Api account 3"
         }
       }
     },
@@ -390,15 +390,7 @@
       }
     }
   ],
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {
-          "Query": "la informacion de los turnos del profesional cabrera"
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -512,7 +504,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "22ae9a1d-28ce-4a19-abf0-0c912579812b",
+  "versionId": "2137abbb-b3bc-476c-b0b3-59ad16219583",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5d840d27d053efb15625591294fb1f62a8b26fe1046aaec7fbd331072dbb2d25"
